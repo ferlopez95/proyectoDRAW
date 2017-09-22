@@ -35,7 +35,6 @@ reserved = {
     'clear' : 'CLEAR',
     'square' : 'SQUARE',
     'circle' : 'CIRCLE',
-    'length' : 'LENGTH',
     'Draw' : 'NEWDRAW',
     
 }
@@ -63,7 +62,6 @@ tokens = (
     'RPAREN',
     'LBRACKET',
     'RBRACKET',
-    'QUOTES',
     'PERCENT',
     'AND',
     'OR',
@@ -93,7 +91,6 @@ t_LPAREN = r'\('
 t_RPAREN = r'\)'
 t_LBRACKET = r'\['
 t_RBRACKET = r'\]'
-t_QUOTES = r'\"'
 t_AND = r'&&'
 t_OR = r'\|\|'
 t_PERCENT = r'%'
@@ -145,20 +142,6 @@ def test(data, lexer):
 
 lexer = lex.lex()
 
-#def Analizador_lexico():
-#    a = input("direccion: ")
-#    if ( os.path.exists (a)):
-#        f = open(a)
-#        data = f.read()
-#        f.close()
-#        #Build lexer and try on
-#        lexer.input(data)
-#        test(data, lexer)
-#    else:
-#        print ("El archivo no existe")
-
-VERBOSE = 1
-
 def p_programa(p):
     '''programa : globales funcion main
     | main
@@ -194,23 +177,32 @@ def p_estatuto(p):
     pass
 
 def p_asignacion(p):
-    '''asignacion : ID asignacion_2'''
+    '''asignacion : ID asignacion_2 SEMICOLON'''
     pass
 
 def p_asignacion_2(p):
     '''asignacion_2 : EQUAL expresion
-    | LBRACKET CTE_I asignacion_3'''
+    | LBRACKET exp asignacion_3 EQUAL expresion'''
     pass
     
 def p_asignacion_3(p):
     '''asignacion_3 : RBRACKET
-    | COMMA CTE_I RBRACKET'''
+    | COMMA exp RBRACKET'''
     pass
 
 def p_vars(p):
     '''vars : DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON
     | data_type ID vars2
-    | ARRAY ID vars3'''
+    | array ID vars3'''
+    pass
+
+def p_array(p):
+    ''' array : ARRAY LESS data_type COMMA CTE_I array_2 GREATER '''
+    pass
+
+def p_array_2(p) :
+    ''' array_2 : COMMA CTE_I
+    | empty '''
     pass
 
 def p_vars_2(p):
@@ -242,7 +234,7 @@ def p_llamada_exp_2(p):
     pass
 
 def p_def_array(p):
-    '''def_array : LBRACKET def_array_2'''
+    '''def_array : LBRACKET def_array_2 '''
     pass
 
 def p_def_array_2(p):
@@ -296,7 +288,7 @@ def p_termino_2(p):
     pass
 
 def p_var_cte(p):
-    '''var_cte : ID
+    '''var_cte : ID var_cte_2
     | CTE_I
     | CTE_F
     | TRUE
@@ -304,16 +296,20 @@ def p_var_cte(p):
     | llamada'''
     pass
 
+def p_var_cte_2(p):
+    ''' var_cte_2 : LBRACKET exp var_cte_3
+    | empty '''
+    pass
+
+def p_var_cte_3(p):
+    '''var_cte_3 : RBRACKET
+    | COMMA exp RBRACKET'''
+    pass
+
 def p_factor(p):
     '''factor : LPAREN expresion RPAREN
     | addop var_cte
-    | var_cte
-    | ID LBRACKET exp factor_2'''
-    pass
-
-def p_factor_2(p):
-    '''factor_2 : RBRACKET
-    | COMMA exp RBRACKET'''
+    | var_cte'''
     pass
 
 def p_condicion(p):
@@ -331,11 +327,44 @@ def p_ciclo(p):
     pass
 
 def p_accion(p):
-    '''accion : ID POINT llamada SEMICOLON'''
+    '''accion : ID POINT accion_nombre accion_params SEMICOLON'''
+    pass
+
+def p_accion_params(p):
+    ''' accion_params : LPAREN accion_params_2 '''
+    pass
+
+def p_accion_params_2(p):
+    ''' accion_params_2 : accion_params_cte RPAREN
+    | RPAREN '''
+    pass
+
+def p_accion_params_cte(p):
+    ''' accion_params_cte : var_cte accion_params_cte_2'''
+    pass
+
+def p_accion_params_cte_2(p):
+    ''' accion_params_cte_2 : COMMA accion_params_cte
+    | empty '''
+    pass
+
+def p_accion_llamada(p):
+    ''' accion_nombre :  SETPOSITION
+    | CIRCLE
+    | RIGHT
+    | LEFT
+    | HIDE
+    | SQUARE
+    | CLEAR
+    | SHOW
+    | BACK
+    | SPEED
+    | FORWARD
+    | SETCOLOR '''
     pass
 
 def p_for(p):
-    '''for : FOR LPAREN CTE_I COMMA CTE_I RPAREN bloque END'''
+    '''for : FOR LPAREN CTE_I COMMA CTE_I COMMA CTE_I RPAREN bloque END'''
     pass
 
 def p_while(p):
@@ -347,12 +376,12 @@ def p_funcion(p):
     pass
 
 def p_funcion_2(p):
-    '''funcion_2 : RETURN expresion END
+    '''funcion_2 : RETURN expresion SEMICOLON END
     | END'''
     pass
 
 def p_var_local(p):
-    '''var_local : ID LPAREN var_local_2 RPAREN'''
+    '''var_local : LPAREN var_local_2 RPAREN'''
     pass
 
 def p_var_local_2(p):
@@ -379,18 +408,15 @@ def p_empty(p):
     'empty :'
     pass
 
-def p_error(p):
-    print("Error")
-    #print str(dir(p))
-    #print str(dir(c_lexer))
-    #if VERBOSE:
-    #    if p is not None:
-    #        print "Error en Sintaxis linea: " + str(p.lexer.lineno)+ "  Error de Contexto " + str(p.value)
-    #    else:
-    #        print "Error en Lexico linea: " + str(c_lexer.lexer.lineno)
-    #else:
-    #    raise Exception('Syntax', 'error')
 
+
+def p_error(p):
+    if p is not None:
+        print ("Error en Sintaxis linea: " + str(p.lexer.lineno)+ "  Error de Contexto " + str(p.value))
+    else:
+        print ("Error en Lexico linea: " + str(c_lexer.lexer.lineno))
+
+            
 import ply.yacc as yacc
 parser = yacc.yacc()
 
