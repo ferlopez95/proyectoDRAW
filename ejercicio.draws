@@ -1,0 +1,57 @@
+global int g = 0;
+
+def int square(int valor)
+  return valor * valor;
+end
+
+def void main()
+
+  int Height = 500, Width = 500;
+  int i = 0;
+  float f = 15.5;
+  boolean b = true;
+  array <int,3> arr = [1,2,3];
+
+  f = ((f + (15 * .5))/2) - 1;
+
+  window w1 = Window(Height,Width);
+
+  w1.Background(0,0,0);
+
+  draw d1 = Draw();
+
+  d1.setPosition(100,100);
+  d1.setColor(255,0,0);
+
+  d1.speed(3);
+  d1.forward(50);
+  d1.left(90);
+  d1.back(50);
+  d1.right(180);
+
+  for(i, 100, 1)
+    if(i%2 == 0)
+      d1.forward(30);
+      d1.left(i);
+    else
+      d1.forward(50);
+      d1.left(i);
+    end
+  end
+
+  int j = 0;
+
+  while(j < 50)
+    d1.forward(10);
+    j = j + 1;
+  end
+
+  j = arr.lenght();
+  float x = square(j);
+  arr[0] = 4;
+  array <int,3> B = [1,2,3];
+
+  int A = 4;
+  A = B[i+j,j] * square(A);
+
+end
