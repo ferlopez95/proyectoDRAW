@@ -3,15 +3,23 @@ import ply.yacc as yacc
 
 tokens = c_lexer.tokens
 
+dir_func = {}
+actual_scope = 'global'
+
+
 def p_programa(p):
-    '''programa : globales funcion main
-    | main
-    | funcion main'''
+    '''programa : globales funciones 
+    | funciones'''
+    pass
+
+def p_funciones(p):
+    '''funciones : funcion main
+    | main '''
     pass
 
 def p_globales(p):
     '''globales : GLOBAL vars'''
-    pass
+    dir_func[p[1]] = {'type' : 'void', 'scope' : {}}
 
 def p_bloque(p):
     '''bloque : estatuto bloque
@@ -22,11 +30,11 @@ def p_data_type(p):
     '''data_type : INT
     | FLOAT
     | BOOLEAN'''
-    pass
+    p[0] = p[1]
 
 def p_main(p):
     '''main : DEF VOID MAIN LPAREN RPAREN bloque END'''
-    pass
+    dir_func[p[3]] = {'type' : p[2], 'scope' : {}}
 
 def p_estatuto(p):
     '''estatuto : asignacion
@@ -234,7 +242,7 @@ def p_while(p):
 
 def p_funcion(p):
     '''funcion :  DEF data_type ID var_local bloque funcion_2'''
-    pass
+    dir_func[p[3]] = { 'type' : p[2], 'scope' : {}}
 
 def p_funcion_2(p):
     '''funcion_2 : RETURN expresion SEMICOLON END
