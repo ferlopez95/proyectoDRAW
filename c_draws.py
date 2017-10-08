@@ -6,8 +6,7 @@ parser = c_parser.parser
 drawCompiler = c_parser.drawCompiler
 
 
-#a = input("direccion: ")
-a = 'ejercicio.draws'
+a = input("direccion: ")
 if ( os.path.exists (a)):
     f = open(a)
     data = f.read()

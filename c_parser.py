@@ -8,9 +8,13 @@ drawCompiler = HelperClass('global')
 
 
 def p_programa(p):
-    '''programa : globales funciones 
-    | funciones'''
+    '''programa : globales funciones programa_end
+    | funciones programa_end'''
     pass
+
+def p_programa_end(p):
+    ''' programa_end : empty '''
+    drawCompiler.erase_dir_func()
 
 def p_funciones(p):
     '''funciones : funcion main

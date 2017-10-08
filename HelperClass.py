@@ -43,3 +43,6 @@ class HelperClass(object):
 
     def global_vars(self):
         return self.dir_func['global']['vars']
+
+    def erase_dir_func(self):
+        self.dir_func = {}

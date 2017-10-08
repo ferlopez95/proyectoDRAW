@@ -1,0 +1,32 @@
+global int g = 0;
+
+def int triangle(int g)
+  int a = 1;
+  draw d2 = Draw();
+  draw d2 = Draw();
+  return a;
+end
+
+def void main()
+  
+  array <int,3> arr = [1,2,3];
+  int a = 1;
+  int b = 2;
+  int c = g + arr[0];
+  draw d1 = Draw();
+
+  while(a < 50)
+    d1.forward(10);
+    int h = 10;
+    a = h + 1;
+
+    if ( a > 1 )
+      int x = 0;
+    end
+
+    a = x;
+  end
+
+  b = h;
+  
+end
