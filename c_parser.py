@@ -4,9 +4,7 @@ from HelperClass import HelperClass
 
 tokens = c_lexer.tokens
 
-dir_func = {}
-
-scope = HelperClass('global')
+drawCompiler = HelperClass('global')
 
 
 def p_programa(p):
@@ -30,7 +28,7 @@ def p_globales_2(p):
 
 def p_global_1(p):
     ''' global_1 : GLOBAL '''
-    dir_func[p[1]] = {'type' : 'void', 'scope' : {}}
+    drawCompiler.add_func('void', p[1])
 
 def p_bloque(p):
     '''bloque : estatuto bloque
@@ -49,8 +47,8 @@ def p_main(p):
 
 def p_main_1(p):
     ''' main_1 : DEF VOID MAIN LPAREN RPAREN'''
-    scope.actual_scope = p[3]
-    dir_func[p[3]] = {'type' : p[2], 'scope' : {}}
+    drawCompiler.actual_scope = p[3]
+    drawCompiler.add_func(p[2], p[3])
 
 def p_estatuto(p):
     '''estatuto : asignacion
@@ -62,8 +60,13 @@ def p_estatuto(p):
     pass
 
 def p_asignacion(p):
-    '''asignacion : ID asignacion_2 SEMICOLON'''
+    '''asignacion : asignacion_id asignacion_2 SEMICOLON'''
     pass
+
+def p_asignacion_id(p):
+    '''asignacion_id : ID'''
+    if not drawCompiler.exists_in_scope(p[1]):
+        print ("Error: La variable " + p[1] + " no está definida (Línea " + str(p.lexer.lineno) + ")")
 
 def p_asignacion_2(p):
     '''asignacion_2 : EQUAL expresion
@@ -78,9 +81,20 @@ def p_asignacion_3(p):
 def p_vars(p):
     '''vars : DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON
     | data_type ID vars2
-    | array ID vars3'''
-    if p[1] == "int":
-        dir_func[scope.actual_scope]['scope'][p[2]] = {'type' : p[1]}
+    | vars_aux'''
+    if len(p) >= 4:
+        if drawCompiler.exists_in_scope(p[2]):
+            print ("Error: La variable " + p[2] + " ya está definida (Línea " + str(p.lexer.lineno) + ")")
+        else:
+            drawCompiler.add_var(p[1], p[2])
+
+
+def p_vars_aux(p):
+    ''' vars_aux : array ID vars3 '''
+    if drawCompiler.exists_in_scope(p[2]):
+        print ("Error: La variable " + p[2] + " ya está definida (Línea " + str(p.lexer.lineno) + ")")
+    else:
+        drawCompiler.add_var('array', p[2])
 
 def p_array(p):
     ''' array : ARRAY LESS data_type COMMA CTE_I array_2 GREATER '''
@@ -102,8 +116,14 @@ def p_vars_3(p):
     pass
 
 def p_llamada(p):
-    '''llamada : ID LPAREN llamada_2'''
+    '''llamada : llamada_id LPAREN llamada_2'''
     pass
+
+def p_llamada_id(p):
+    ''' llamada_id : ID '''
+    if not drawCompiler.exists_func(p[1]):
+        print ("Error: La función " + p[1] + " no está definida (Línea " + str(p.lexer.lineno) + ")")
+    
 
 def p_llamada_2(p):
     '''llamada_2 : llamada_exp RPAREN
@@ -174,13 +194,18 @@ def p_termino_2(p):
     pass
 
 def p_var_cte(p):
-    '''var_cte : ID var_cte_2
+    '''var_cte : var_cte_1
     | CTE_I
     | CTE_F
     | TRUE
     | FALSE
     | llamada'''
     pass
+
+def p_var_cte_1(p):
+    ''' var_cte_1 : ID var_cte_2 '''
+    if not drawCompiler.exists_in_scope(p[1]) : 
+        print ("Error: La variable " + p[1] + " no esta definida (Línea " + str(p.lexer.lineno) + ")")
 
 def p_var_cte_2(p):
     ''' var_cte_2 : LBRACKET exp var_cte_3
@@ -199,13 +224,22 @@ def p_factor(p):
     pass
 
 def p_condicion(p):
-    '''condicion : IF LPAREN expresion RPAREN bloque condicion_2'''
+    '''condicion : condicion_id LPAREN expresion RPAREN bloque condicion_2'''
     pass
 
+
+def p_condicion_id(p):
+    '''condicion_id : IF'''
+    drawCompiler.add_inner_scope()
+
 def p_condicion_2(p):
-    '''condicion_2 : END
-    | ELSE  bloque END'''
+    '''condicion_2 : condicion_end
+    | ELSE  bloque condicion_end'''
     pass
+
+def p_condicion_end(p):
+    ''' condicion_end : END '''
+    drawCompiler.pop_inner_scope()
 
 def p_ciclo(p):
     '''ciclo : for
@@ -250,12 +284,28 @@ def p_accion_llamada(p):
     pass
 
 def p_for(p):
-    '''for : FOR LPAREN CTE_I COMMA CTE_I COMMA CTE_I RPAREN bloque END'''
+    '''for : for_init LPAREN CTE_I COMMA CTE_I COMMA CTE_I RPAREN bloque for_end'''
     pass
 
+def p_for_init(p):
+    ''' for_init : FOR '''
+    drawCompiler.add_inner_scope()
+
+def p_for_end(p):
+    ''' for_end : END '''
+    drawCompiler.pop_inner_scope()
+
 def p_while(p):
-    '''while : WHILE LPAREN expresion RPAREN bloque END'''
+    '''while : while_init LPAREN expresion RPAREN bloque while_end'''
     pass
+
+def p_while_init(p):
+    ''' while_init : WHILE '''
+    drawCompiler.add_inner_scope()
+
+def p_while_end(p):
+    ''' while_end : END '''
+    drawCompiler.pop_inner_scope()
 
 def p_funcion(p):
     '''funcion :  funcion_1 var_local bloque funcion_2'''
@@ -263,21 +313,31 @@ def p_funcion(p):
 
 def p_funcion_1(p):
     '''funcion_1 :  DEF data_type ID'''
-    scope.actual_scope = p[3]
-    dir_func[p[3]] = { 'type' : p[2], 'scope' : {}}
+    drawCompiler.actual_scope = p[3]
+    drawCompiler.add_func(p[2], p[3])
 
 def p_funcion_2(p):
-    '''funcion_2 : RETURN expresion SEMICOLON END
-    | END'''
+    '''funcion_2 : RETURN expresion SEMICOLON funcion_end
+    | funcion_end'''
     pass
+
+def p_funcion_end(p):
+    ''' funcion_end : END '''
+    drawCompiler.actual_scope = 'global'
 
 def p_var_local(p):
     '''var_local : LPAREN var_local_2 RPAREN'''
     pass
 
 def p_var_local_2(p):
-    '''var_local_2 : data_type ID var_local_3'''
+    '''var_local_2 : var_local_2_1 var_local_3
+    | empty'''
     pass
+
+def p_var_local_2_1(p):
+    '''var_local_2_1 : data_type ID '''
+    if drawCompiler.exists_in_scope(p[2]):
+        print("Error: La variable " + p[2] + " ya está definida (Línea " + str(p.lexer.lineno) + ")")
 
 def p_var_local_3(p):
     '''var_local_3 : COMMA var_local_2

@@ -1,21 +1,26 @@
 global int g = 0;
 
-def int triangle(int valor)
-  int a = 0;
-  return valor * valor;
+def int triangle(int n)
+  int a = 1;
+  draw d2 = Draw();
+  return a;
 end
 
 def void main()
-
-  int Height = 500;
-  int i = 0;
-  float f = 15.5;
-  boolean b = true;
+  
   array <int,3> arr = [1,2,3];
-
-  f = ((f + (15 * 0.5))/2) - 1;
-
+  int a = 1;
+  int b = 2;
+  int c = g + arr[0];
   draw d1 = Draw();
+
+  while(a < 50)
+    d1.forward(10);
+    int h = 10;
+    a = h + 1;
+  end
+
+  h = 10;
 
   d1.setPosition(100,100);
   d1.setColor(255,0,0);
@@ -25,29 +30,5 @@ def void main()
   d1.left(90);
   d1.back(50);
   d1.right(180);
-
-  for(1, 100, 1)
-    if(i%2 == 0)
-      d1.forward(30);
-      d1.left(i);
-    else
-      d1.forward(50);
-      d1.left(i);
-    end
-  end
-
-  int j = 0;
-
-  while(j < 50)
-    d1.forward(10);
-    j = j + 1;
-  end
-
-  float x = triangle(j);
-  arr[0] = 4;
-  array <int,3> B = [1,2,3];
-
-  int A = 4;
-  A = B[i+j,j] * triangle(A);
 
 end

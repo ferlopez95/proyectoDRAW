@@ -3,7 +3,7 @@ import c_parser
 import os
 
 parser = c_parser.parser
-dir_func = c_parser.dir_func
+drawCompiler = c_parser.drawCompiler
 
 
 #a = input("direccion: ")
@@ -13,7 +13,7 @@ if ( os.path.exists (a)):
     data = f.read()
     f.close()
     parser.parse(data)
-    for key, value in dir_func.items() :
+    for key, value in drawCompiler.dir_func.items() :
         print(str(key) + " : " + str(value))
 else:
     print("El archivo no existe")
