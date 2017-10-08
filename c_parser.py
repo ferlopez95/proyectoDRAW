@@ -1,10 +1,12 @@
 import c_lexer
 import ply.yacc as yacc
+from HelperClass import HelperClass
 
 tokens = c_lexer.tokens
 
 dir_func = {}
-actual_scope = 'global'
+
+scope = HelperClass('global')
 
 
 def p_programa(p):
@@ -18,7 +20,16 @@ def p_funciones(p):
     pass
 
 def p_globales(p):
-    '''globales : GLOBAL vars'''
+    '''globales : global_1 vars globales_2'''
+    pass
+
+def p_globales_2(p):
+    ''' globales_2 : global_1 vars globales_2
+    | empty '''
+    pass
+
+def p_global_1(p):
+    ''' global_1 : GLOBAL '''
     dir_func[p[1]] = {'type' : 'void', 'scope' : {}}
 
 def p_bloque(p):
@@ -33,7 +44,12 @@ def p_data_type(p):
     p[0] = p[1]
 
 def p_main(p):
-    '''main : DEF VOID MAIN LPAREN RPAREN bloque END'''
+    '''main : main_1 bloque END'''
+    pass
+
+def p_main_1(p):
+    ''' main_1 : DEF VOID MAIN LPAREN RPAREN'''
+    scope.actual_scope = p[3]
     dir_func[p[3]] = {'type' : p[2], 'scope' : {}}
 
 def p_estatuto(p):
@@ -63,7 +79,8 @@ def p_vars(p):
     '''vars : DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON
     | data_type ID vars2
     | array ID vars3'''
-    pass
+    if p[1] == "int":
+        dir_func[scope.actual_scope]['scope'][p[2]] = {'type' : p[1]}
 
 def p_array(p):
     ''' array : ARRAY LESS data_type COMMA CTE_I array_2 GREATER '''
@@ -241,7 +258,12 @@ def p_while(p):
     pass
 
 def p_funcion(p):
-    '''funcion :  DEF data_type ID var_local bloque funcion_2'''
+    '''funcion :  funcion_1 var_local bloque funcion_2'''
+    pass
+
+def p_funcion_1(p):
+    '''funcion_1 :  DEF data_type ID'''
+    scope.actual_scope = p[3]
     dir_func[p[3]] = { 'type' : p[2], 'scope' : {}}
 
 def p_funcion_2(p):

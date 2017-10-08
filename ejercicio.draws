@@ -1,6 +1,7 @@
 global int g = 0;
 
 def int triangle(int valor)
+  int a = 0;
   return valor * valor;
 end
 

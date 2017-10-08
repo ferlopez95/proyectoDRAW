@@ -13,6 +13,7 @@ if ( os.path.exists (a)):
     data = f.read()
     f.close()
     parser.parse(data)
-    print(dir_func)
+    for key, value in dir_func.items() :
+        print(str(key) + " : " + str(value))
 else:
     print("El archivo no existe")
