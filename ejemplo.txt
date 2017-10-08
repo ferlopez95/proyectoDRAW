@@ -1,6 +1,0 @@
-def void main()
-
-int i = 10;
-
-end
-
