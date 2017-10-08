@@ -19,9 +19,7 @@ def void main()
     int h = 10;
     a = h + 1;
   end
-
-  h = 10;
-
+  
   d1.setPosition(100,100);
   d1.setColor(255,0,0);
 
