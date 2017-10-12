@@ -1,25 +1,33 @@
 global int g = 0;
 
 def int triangle(int n)
-  int a = 1;
+  int a = n;
   draw d2 = Draw();
   return a;
 end
 
-def void main()
-  
+def int cuadrado(int n)
+  int a = n * n;
+  return a;
+end
+
+main()
+
   array <int,3> arr = [1,2,3];
   int a = 1;
   int b = 2;
   int c = g + arr[0];
   draw d1 = Draw();
 
+  if(4<5 && 6>8 || ((4+5/2) == (3*8-2)))
+    a = c + b;
+  end
   while(a < 50)
     d1.forward(10);
     int h = 10;
     a = h + 1;
   end
-  
+
   d1.setPosition(100,100);
   d1.setColor(255,0,0);
 

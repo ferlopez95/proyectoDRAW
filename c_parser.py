@@ -17,8 +17,12 @@ def p_programa_end(p):
     drawCompiler.erase_dir_func()
 
 def p_funciones(p):
-    '''funciones : funcion main
-    | main '''
+    '''funciones : funciones_2 main'''
+    pass
+
+def p_funciones_2(p):
+    '''funciones_2 : funcion funciones_2
+    | empty'''
     pass
 
 def p_globales(p):
@@ -45,14 +49,21 @@ def p_data_type(p):
     | BOOLEAN'''
     p[0] = p[1]
 
+def p_data_type_func(p):
+    '''data_type_func : INT
+    | FLOAT
+    | BOOLEAN
+    | VOID'''
+    p[0] = p[1]
+
 def p_main(p):
     '''main : main_1 bloque END'''
     pass
 
 def p_main_1(p):
-    ''' main_1 : DEF VOID MAIN LPAREN RPAREN'''
+    ''' main_1 : MAIN LPAREN RPAREN'''
     drawCompiler.actual_scope = p[3]
-    drawCompiler.add_func(p[2], p[3])
+    drawCompiler.add_func("void", p[3])
 
 def p_estatuto(p):
     '''estatuto : asignacion
@@ -73,8 +84,8 @@ def p_asignacion_id(p):
         print ("Error: La variable " + p[1] + " no está definida (Línea " + str(p.lexer.lineno) + ")")
 
 def p_asignacion_2(p):
-    '''asignacion_2 : EQUAL expresion
-    | LBRACKET exp asignacion_3 EQUAL expresion'''
+    '''asignacion_2 : EQUAL super_exp
+    | LBRACKET exp asignacion_3 EQUAL super_exp'''
     pass
     
 def p_asignacion_3(p):
@@ -110,7 +121,7 @@ def p_array_2(p) :
     pass
 
 def p_vars_2(p):
-    '''vars2 : EQUAL expresion SEMICOLON
+    '''vars2 : EQUAL super_exp SEMICOLON
     | SEMICOLON'''
     pass
 
@@ -135,7 +146,7 @@ def p_llamada_2(p):
     pass
 
 def p_llamada_exp(p):
-    '''llamada_exp : expresion llamada_exp2'''
+    '''llamada_exp : super_exp llamada_exp2'''
     pass
 
 def p_llamada_exp_2(p):
@@ -158,6 +169,15 @@ def p_def_array_cte(p):
 
 def p_def_array_cte_2(p):
     '''def_array_cte_2 : COMMA def_array_cte
+    | empty'''
+    pass
+
+def p_super_exp(p):
+    '''super_exp : expresion super_exp_2'''
+    pass
+
+def p_super_exp_2(p):
+    '''super_exp_2 :  logicop super_exp
     | empty'''
     pass
 
@@ -222,13 +242,13 @@ def p_var_cte_3(p):
     pass
 
 def p_factor(p):
-    '''factor : LPAREN expresion RPAREN
+    '''factor : LPAREN super_exp RPAREN
     | addop var_cte
     | var_cte'''
     pass
 
 def p_condicion(p):
-    '''condicion : condicion_id LPAREN expresion RPAREN bloque condicion_2'''
+    '''condicion : condicion_id LPAREN super_exp RPAREN bloque condicion_2'''
     pass
 
 
@@ -300,7 +320,7 @@ def p_for_end(p):
     drawCompiler.pop_inner_scope()
 
 def p_while(p):
-    '''while : while_init LPAREN expresion RPAREN bloque while_end'''
+    '''while : while_init LPAREN super_exp RPAREN bloque while_end'''
     pass
 
 def p_while_init(p):
@@ -316,18 +336,18 @@ def p_funcion(p):
     pass
 
 def p_funcion_1(p):
-    '''funcion_1 :  DEF data_type ID'''
+    '''funcion_1 :  DEF data_type_func ID'''
     drawCompiler.actual_scope = p[3]
     drawCompiler.add_func(p[2], p[3])
 
 def p_funcion_2(p):
-    '''funcion_2 : RETURN expresion SEMICOLON funcion_end
+    '''funcion_2 : RETURN super_exp SEMICOLON funcion_end
     | funcion_end'''
     pass
 
 def p_funcion_end(p):
     ''' funcion_end : END '''
-    drawCompiler.actual_scope = 'global'
+    drawCompiler.actual_scope = 'global'    
 
 def p_var_local(p):
     '''var_local : LPAREN var_local_2 RPAREN'''
@@ -342,6 +362,8 @@ def p_var_local_2_1(p):
     '''var_local_2_1 : data_type ID '''
     if drawCompiler.exists_in_scope(p[2]):
         print("Error: La variable " + p[2] + " ya está definida (Línea " + str(p.lexer.lineno) + ")")
+    else:
+        drawCompiler.add_var(p[1], p[2])
 
 def p_var_local_3(p):
     '''var_local_3 : COMMA var_local_2
@@ -357,6 +379,11 @@ def p_timesop(p):
     '''timesop : TIMES
     | DIVIDE
     | PERCENT'''
+    pass
+
+def p_logicop(p):
+    '''logicop : AND
+    | OR'''
     pass
 
 def p_empty(p):
