@@ -62,8 +62,8 @@ def p_main(p):
 
 def p_main_1(p):
     ''' main_1 : MAIN LPAREN RPAREN'''
-    drawCompiler.actual_scope = p[3]
-    drawCompiler.add_func("void", p[3])
+    drawCompiler.actual_scope = p[1]
+    drawCompiler.add_func("void", p[1])
 
 def p_estatuto(p):
     '''estatuto : asignacion
@@ -197,7 +197,7 @@ def p_relop(p):
     | LESSEQUAL
     | DEQUAL
     | DISTINT'''
-    pass
+    drawCompiler.add_pOper(p[1])
 
 def p_exp(p):
     '''exp : termino exp_2'''
@@ -210,7 +210,13 @@ def p_exp_2(p):
 
 def p_termino(p):
     '''termino : factor termino_2'''
-    pass
+    if(drawCompiler.top_pOper() == '+' or drawCompiler.top_pOper() == '-'):
+        right_operand = drawCompiler.pop_pilaO()
+        right_type = drawCompiler.pop_pType()
+        leftOperand = drawCompiler.pop_pilaO()
+        left_type = drawCompiler.pop_pType()
+        operator = drawCompiler.pop_pOper()
+        drawCompiler.add_quad(operator,leftOperand,rightOperand)
 
 def p_termino_2(p):
     '''termino_2 : timesop termino
@@ -230,6 +236,9 @@ def p_var_cte_1(p):
     ''' var_cte_1 : ID var_cte_2 '''
     if not drawCompiler.exists_in_scope(p[1]) : 
         print ("Error: La variable " + p[1] + " no esta definida (Línea " + str(p.lexer.lineno) + ")")
+    else:
+        drawCompiler.add_pilaO(p[1])
+        drawCompiler.add_pType(drawCompiler.get_type(p[1]))
 
 def p_var_cte_2(p):
     ''' var_cte_2 : LBRACKET exp var_cte_3
@@ -373,18 +382,18 @@ def p_var_local_3(p):
 def p_addop(p):
     '''addop : PLUS
     | MINUS'''
-    pass
+    drawCompiler.add_pOper(p[1])
 
 def p_timesop(p):
     '''timesop : TIMES
     | DIVIDE
     | PERCENT'''
-    pass
+    drawCompiler.add_pOper(p[1])
 
 def p_logicop(p):
     '''logicop : AND
     | OR'''
-    pass
+    drawCompiler.add_pOper(p[1])
 
 def p_empty(p):
     'empty :'

@@ -7,7 +7,7 @@ drawCompiler = c_parser.drawCompiler
 
 
 #a = input("direccion: ")
-a = "ejercicio.draws"
+a = "ejemplo.draws"
 if ( os.path.exists (a)):
     f = open(a)
     data = f.read()
@@ -15,5 +15,9 @@ if ( os.path.exists (a)):
     parser.parse(data)
     for key, value in drawCompiler.dir_func.items() :
         print(str(key) + " : " + str(value))
+    print(drawCompiler.pilaO)
+    print(drawCompiler.pType)
+    print(drawCompiler.pOper)
+    print(drawCompiler.quad)
 else:
     print("El archivo no existe")

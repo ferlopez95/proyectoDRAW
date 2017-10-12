@@ -1,0 +1,7 @@
+global int g;
+main()
+ int a;
+ int b;
+ int c = a + b;
+ int d = c + a;
+end

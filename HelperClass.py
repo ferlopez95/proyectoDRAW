@@ -3,6 +3,10 @@ class HelperClass(object):
     def __init__(self, actual_scope):
         self.actual_scope = actual_scope
         self.dir_func = {}
+        self.pOper = []
+        self.pType = []
+        self.pilaO = []
+        self.quad = []
 
     def exists_in_scope(self, id):
         if (len(self.inner_scopes()) >= 1):
@@ -46,3 +50,46 @@ class HelperClass(object):
 
     def erase_dir_func(self):
         self.dir_func = {}
+
+    def add_pilaO(self, id):
+        self.pilaO.append(id)
+
+    def add_pOper(self, oper):
+        self.pOper.append(oper)
+
+    def add_pType(self, type):
+        self.pType.append(type)
+
+    def pop_pilaO(self):
+        if (len(self.pilaO) > 0):
+            self.pilaO.pop()
+
+    def pop_pOper(self):
+        if (len(self.pOper) > 0):
+            self.pOper.pop()
+
+    def pop_pType(self):
+        if (len(self.pType) > 0):
+            self.pType.pop()
+
+    def top_pOper(self):
+        if (len(self.pOper) > 0):
+            temp = self.pop_pOper()
+            self.add_pOper(temp)
+            return temp
+        else:
+            return -1
+
+    def get_type(self, id):
+        if (id in self.vars_table()) :
+            return self.vars_table()[id]['type']
+        elif(id in self.global_vars()):
+            return self.global_vars()[id]['type']
+        for key in self.inner_scopes():
+            if id in key:
+                return key[id]['type']
+        return -1
+
+    def add_quad(self,operator,leftOperand,rightOperand):
+        self.quad.append({'operator':operator,'leftOperand':leftOperand,'rightOperand':rightOperand})
+        
