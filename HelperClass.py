@@ -7,6 +7,59 @@ class HelperClass(object):
         self.pType = []
         self.pilaO = []
         self.quad = []
+        self.temp = 0
+
+        self.sem_cube = {'int' : {'int' : {'+': 'int',
+                                            '-': 'int',
+                                            '/': 'float',
+                                            '*': 'int',
+                                            '%': 'int',
+                                            '<': 'boolean',
+                                            '>': 'boolean',
+                                            '<=': 'boolean',
+                                            '>=': 'boolean',
+                                            '!=': 'boolean',
+                                            '==': 'boolean',
+                                            '=': 'int'},
+                                  'float': {'+': 'float',
+                                            '-': 'float',
+                                            '/': 'float',
+                                            '*': 'float',
+                                            '%': 'float',
+                                            '<': 'boolean',
+                                            '>': 'boolean',
+                                            '<=': 'boolean',
+                                            '>=': 'boolean',
+                                            '!=': 'boolean',
+                                            '==': 'boolean',
+                                            '=': 'int'}},
+                         'float' : {'int' : {'+': 'float',
+                                            '-': 'float',
+                                            '/': 'float',
+                                            '*': 'float',
+                                            '%': 'float',
+                                            '<': 'boolean',
+                                            '>': 'boolean',
+                                            '<=': 'boolean',
+                                            '>=': 'boolean',
+                                            '!=': 'boolean',
+                                            '==': 'boolean',
+                                             '=': 'float'},
+                                  'float': {'+': 'float',
+                                            '-': 'float',
+                                            '/': 'float',
+                                            '*': 'float',
+                                            '%': 'float',
+                                            '<': 'boolean',
+                                            '>': 'boolean',
+                                            '<=': 'boolean',
+                                            '>=': 'boolean',
+                                            '!=': 'boolean',
+                                            '==': 'boolean',
+                                            '=': 'float'}},
+                         'boolean' : {'boolean' : {'&&' : 'boolean',
+                                             '||' : 'boolean',
+                                             '=' : 'boolean'}}}
 
     def exists_in_scope(self, id):
         if (len(self.inner_scopes()) >= 1):
@@ -62,21 +115,19 @@ class HelperClass(object):
 
     def pop_pilaO(self):
         if (len(self.pilaO) > 0):
-            self.pilaO.pop()
+            return self.pilaO.pop()
 
     def pop_pOper(self):
         if (len(self.pOper) > 0):
-            self.pOper.pop()
+            return self.pOper.pop()
 
     def pop_pType(self):
         if (len(self.pType) > 0):
-            self.pType.pop()
+            return self.pType.pop()
 
     def top_pOper(self):
         if (len(self.pOper) > 0):
-            temp = self.pop_pOper()
-            self.add_pOper(temp)
-            return temp
+            return self.pOper[len(self.pOper)-1]
         else:
             return -1
 
@@ -90,6 +141,16 @@ class HelperClass(object):
                 return key[id]['type']
         return -1
 
-    def add_quad(self,operator,leftOperand,rightOperand):
-        self.quad.append({'operator':operator,'leftOperand':leftOperand,'rightOperand':rightOperand})
-        
+    def add_quad(self,operator,leftOperand,rightOperand,result):
+        self.quad.append({'operator':operator,'leftOperand':leftOperand,'rightOperand':rightOperand,'result':result})
+
+    def next(self):
+        self.temp = self.temp + 1
+        return self.temp
+
+    def semantic_check(self,left_type,right_type,operator):
+        if left_type in self.sem_cube:
+            if right_type in self.sem_cube[left_type]:
+                if operator in self.sem_cube[left_type][right_type]:
+                    return self.sem_cube[left_type][right_type][operator]
+        return 'error'

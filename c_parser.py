@@ -1,3 +1,4 @@
+import sys
 import c_lexer
 import ply.yacc as yacc
 from HelperClass import HelperClass
@@ -82,11 +83,30 @@ def p_asignacion_id(p):
     '''asignacion_id : ID'''
     if not drawCompiler.exists_in_scope(p[1]):
         print ("Error: La variable " + p[1] + " no está definida (Línea " + str(p.lexer.lineno) + ")")
+    else:
+        drawCompiler.add_pilaO(p[1])
+        drawCompiler.add_pType(drawCompiler.get_type(p[1]))
 
 def p_asignacion_2(p):
-    '''asignacion_2 : EQUAL super_exp
+    '''asignacion_2 : asignacion_equal super_exp
     | LBRACKET exp asignacion_3 EQUAL super_exp'''
-    pass
+    if(len(p) == 3 and drawCompiler.top_pOper() == '='):
+        rightOperand = drawCompiler.pop_pilaO()
+        right_type = drawCompiler.pop_pType()
+        leftOperand = drawCompiler.pop_pilaO()
+        left_type = drawCompiler.pop_pType()
+        operator = drawCompiler.pop_pOper()
+        result_type = drawCompiler.semantic_check(left_type,right_type,operator)
+        if(result_type != 'error'):
+            drawCompiler.add_quad(operator,rightOperand,"",leftOperand)
+        else:
+            drawCompiler.erase_dir_func()
+            print("Type Mismatch in line " + str(p.lexer.lineno))
+            raise SyntaxError
+
+def p_asignacion_equal(p):
+    '''asignacion_equal : EQUAL'''
+    drawCompiler.add_pOper(p[1])
     
 def p_asignacion_3(p):
     '''asignacion_3 : RBRACKET
@@ -95,7 +115,7 @@ def p_asignacion_3(p):
 
 def p_vars(p):
     '''vars : DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON
-    | data_type ID vars2
+    | vars_id vars2
     | vars_aux'''
     if len(p) >= 4:
         if drawCompiler.exists_in_scope(p[2]):
@@ -103,6 +123,14 @@ def p_vars(p):
         else:
             drawCompiler.add_var(p[1], p[2])
 
+def p_vars_id(p):
+    '''vars_id : data_type ID'''
+    if drawCompiler.exists_in_scope(p[2]):
+        print ("Error: La variable " + p[2] + " ya está definida (Línea " + str(p.lexer.lineno) + ")")
+    else:
+        drawCompiler.add_var(p[1], p[2])
+        drawCompiler.add_pilaO(p[2])
+        drawCompiler.add_pType(p[1])
 
 def p_vars_aux(p):
     ''' vars_aux : array ID vars3 '''
@@ -121,9 +149,24 @@ def p_array_2(p) :
     pass
 
 def p_vars_2(p):
-    '''vars2 : EQUAL super_exp SEMICOLON
+    '''vars2 : asignacion_equal super_exp SEMICOLON
     | SEMICOLON'''
-    pass
+    if(len(p) == 4 and drawCompiler.top_pOper() == '='):
+        rightOperand = drawCompiler.pop_pilaO()
+        right_type = drawCompiler.pop_pType()
+        leftOperand = drawCompiler.pop_pilaO()
+        left_type = drawCompiler.pop_pType()
+        operator = drawCompiler.pop_pOper()
+        result_type = drawCompiler.semantic_check(left_type,right_type,operator)
+        if(result_type != 'error'):
+            drawCompiler.add_quad(operator,rightOperand,"",leftOperand)
+        else:
+            drawCompiler.erase_dir_func()
+            print("Type Mismatch in line " + str(p.lexer.lineno))
+            raise SyntaxError
+    else:
+        drawCompiler.pop_pilaO()
+        drawCompiler.pop_pType()
 
 def p_vars_3(p):
     '''vars3 : EQUAL def_array SEMICOLON
@@ -183,7 +226,22 @@ def p_super_exp_2(p):
 
 def p_expresion(p):
     '''expresion : exp expresion_2'''
-    pass
+    if(drawCompiler.top_pOper() == '&&' or drawCompiler.top_pOper() == '||'):
+        rightOperand = drawCompiler.pop_pilaO()
+        right_type = drawCompiler.pop_pType()
+        leftOperand = drawCompiler.pop_pilaO()
+        left_type = drawCompiler.pop_pType()
+        operator = drawCompiler.pop_pOper()
+        result_type = drawCompiler.semantic_check(left_type,right_type,operator)
+        if(result_type != 'error'):
+            result = drawCompiler.next()
+            drawCompiler.add_quad(operator,leftOperand,rightOperand,result)
+            drawCompiler.add_pilaO(result)
+            drawCompiler.add_pType(result_type)
+        else:
+            drawCompiler.erase_dir_func()
+            print("Type Mismatch in line " + str(p.lexer.lineno))
+            raise SyntaxError
 
 def p_expresion_2(p):
     '''expresion_2 : relop exp
@@ -201,7 +259,22 @@ def p_relop(p):
 
 def p_exp(p):
     '''exp : termino exp_2'''
-    pass
+    if(drawCompiler.top_pOper() in ['>','<','>=','<=','!=','==']):
+        rightOperand = drawCompiler.pop_pilaO()
+        right_type = drawCompiler.pop_pType()
+        leftOperand = drawCompiler.pop_pilaO()
+        left_type = drawCompiler.pop_pType()
+        operator = drawCompiler.pop_pOper()
+        result_type = drawCompiler.semantic_check(left_type,right_type,operator)
+        if(result_type != 'error'):
+            result = drawCompiler.next()
+            drawCompiler.add_quad(operator,leftOperand,rightOperand,result)
+            drawCompiler.add_pilaO(result)
+            drawCompiler.add_pType(result_type)
+        else:
+            drawCompiler.erase_dir_func()
+            print("Type Mismatch in line " + str(p.lexer.lineno))
+            raise SyntaxError
 
 def p_exp_2(p):
     '''exp_2 : addop exp
@@ -211,13 +284,22 @@ def p_exp_2(p):
 def p_termino(p):
     '''termino : factor termino_2'''
     if(drawCompiler.top_pOper() == '+' or drawCompiler.top_pOper() == '-'):
-        right_operand = drawCompiler.pop_pilaO()
+        rightOperand = drawCompiler.pop_pilaO()
         right_type = drawCompiler.pop_pType()
         leftOperand = drawCompiler.pop_pilaO()
         left_type = drawCompiler.pop_pType()
         operator = drawCompiler.pop_pOper()
-        drawCompiler.add_quad(operator,leftOperand,rightOperand)
-
+        result_type = drawCompiler.semantic_check(left_type,right_type,operator)
+        if(result_type != 'error'):
+            result = drawCompiler.next()
+            drawCompiler.add_quad(operator,leftOperand,rightOperand,result)
+            drawCompiler.add_pilaO(result)
+            drawCompiler.add_pType(result_type)
+        else:
+            drawCompiler.erase_dir_func()
+            print("Type Mismatch in line " + str(p.lexer.lineno))
+            raise SyntaxError
+        
 def p_termino_2(p):
     '''termino_2 : timesop termino
     | empty'''
@@ -254,7 +336,24 @@ def p_factor(p):
     '''factor : LPAREN super_exp RPAREN
     | addop var_cte
     | var_cte'''
-    pass
+    if (len(p) == 2 or len(p) == 3):
+        if(drawCompiler.top_pOper() == '*' or drawCompiler.top_pOper() == '/' or drawCompiler.top_pOper() == '%'):
+            rightOperand = drawCompiler.pop_pilaO()
+            right_type = drawCompiler.pop_pType()
+            leftOperand = drawCompiler.pop_pilaO()
+            left_type = drawCompiler.pop_pType()
+            operator = drawCompiler.pop_pOper()
+            result_type = drawCompiler.semantic_check(left_type,right_type,operator)
+            if(result_type != 'error'):
+                result = drawCompiler.next()
+                drawCompiler.add_quad(operator,leftOperand,rightOperand,result)
+                drawCompiler.add_pilaO(result)
+                drawCompiler.add_pType(result_type)
+            else:
+                drawCompiler.erase_dir_func()
+                print("Type Mismatch in line " + str(p.lexer.lineno))
+                raise SyntaxError
+        
 
 def p_condicion(p):
     '''condicion : condicion_id LPAREN super_exp RPAREN bloque condicion_2'''
