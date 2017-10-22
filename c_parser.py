@@ -1,3 +1,4 @@
+# -*- coding: utf8 -*-
 import sys
 import c_lexer
 import ply.yacc as yacc
@@ -163,7 +164,7 @@ def p_vars_2(p):
         else:
             drawCompiler.erase_dir_func()
             print("Type Mismatch in line " + str(p.lexer.lineno))
-            raise SyntaxError
+            sys.exit(0)
     else:
         drawCompiler.pop_pilaO()
         drawCompiler.pop_pType()
@@ -220,9 +221,8 @@ def p_super_exp(p):
     pass
 
 def p_super_exp_2(p):
-    '''super_exp_2 :  logicop super_exp
+    '''super_exp_2 :  logicop super_exp_2
     | empty'''
-    pass
 
 def p_expresion(p):
     '''expresion : exp expresion_2'''
@@ -307,12 +307,27 @@ def p_termino_2(p):
 
 def p_var_cte(p):
     '''var_cte : var_cte_1
-    | CTE_I
-    | CTE_F
-    | TRUE
-    | FALSE
+    | var_cte_i
+    | var_cte_f
+    | var_cte_b
     | llamada'''
     pass
+
+def p_var_cte_i(p):
+    ''' var_cte_i : CTE_I '''
+    drawCompiler.add_pilaO(p[1])
+    drawCompiler.add_pType("int")
+
+def p_var_cte_f(p):
+    ''' var_cte_f : CTE_F '''
+    drawCompiler.add_pilaO(p[1])
+    drawCompiler.add_pType("float")
+
+def p_var_cte_b(p):
+    ''' var_cte_b : TRUE
+    | FALSE '''
+    drawCompiler.add_pilaO(p[1])
+    drawCompiler.add_pType("boolean")
 
 def p_var_cte_1(p):
     ''' var_cte_1 : ID var_cte_2 '''
@@ -356,8 +371,19 @@ def p_factor(p):
         
 
 def p_condicion(p):
-    '''condicion : condicion_id LPAREN super_exp RPAREN bloque condicion_2'''
+    '''condicion : condicion_id LPAREN super_exp rparen_condicion bloque condicion_2'''
     pass
+
+def p_rparen_condicion(p):
+    ''' rparen_condicion : RPAREN '''
+    exp_type = drawCompiler.pop_pType()
+    if(exp_type != 'boolean'):
+        print("Type Mismatch in line " +  str(p.lexer.lineno) + " expression should be boolean")
+        raise SyntaxError
+    else:
+        result = drawCompiler.pop_pilaO()
+        drawCompiler.add_quad("GotoF", result, -1, -1)
+        drawCompiler.add_pJumps(drawCompiler.get_cont()-1)
 
 
 def p_condicion_id(p):
@@ -366,11 +392,20 @@ def p_condicion_id(p):
 
 def p_condicion_2(p):
     '''condicion_2 : condicion_end
-    | ELSE  bloque condicion_end'''
+    | condicion_else  bloque condicion_end'''
     pass
+
+def p_condicion_else(p):
+    ''' condicion_else : ELSE '''
+    drawCompiler.add_quad("GOTO", -1, -1 ,-1)
+    falso = drawCompiler.pop_pJumps()
+    drawCompiler.add_pJumps(drawCompiler.get_cont()-1)
+    drawCompiler.fill(falso, drawCompiler.get_cont())
 
 def p_condicion_end(p):
     ''' condicion_end : END '''
+    end = drawCompiler.pop_pJumps()
+    drawCompiler.fill(end, drawCompiler.get_cont())
     drawCompiler.pop_inner_scope()
 
 def p_ciclo(p):

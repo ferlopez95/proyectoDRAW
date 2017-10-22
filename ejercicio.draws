@@ -1,8 +1,6 @@
 global int g = 0;
-
 def int triangle(int n)
-  int a = n;
-  draw d2 = Draw();
+  int a = 10;
   return a;
 end
 

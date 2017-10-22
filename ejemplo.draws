@@ -3,12 +3,9 @@ main()
  int a;
  int b;
  int c = a * b;
- a = c + b;
- int d = c + a;
- int e = d + c / d - a;
- int f = a * b;
- boolean h = a < b;
- boolean i = c != d;
- boolean j = h && i;
- boolean k = a > b || c != d;
+ if(a == b)
+    a = c + b;
+ else
+    a = 2;
+ end
 end

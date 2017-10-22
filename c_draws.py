@@ -18,6 +18,7 @@ if ( os.path.exists (a)):
     print(drawCompiler.pilaO)
     print(drawCompiler.pType)
     print(drawCompiler.pOper)
-    print(drawCompiler.quad)
+    for quad in drawCompiler.quad : 
+        print (quad)
 else:
     print("El archivo no existe")

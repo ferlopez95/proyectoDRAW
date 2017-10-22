@@ -1,0 +1,11 @@
+global int g;
+main()
+ int a;
+ int b;
+ int c = a * b;
+ if(a == b)
+    a = c + b;
+ else
+ 	a = 2;
+ end
+end

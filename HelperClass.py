@@ -8,6 +8,8 @@ class HelperClass(object):
         self.pilaO = []
         self.quad = []
         self.temp = 0
+        self.pJumps = []
+        self.cont = 0
 
         self.sem_cube = {'int' : {'int' : {'+': 'int',
                                             '-': 'int',
@@ -143,6 +145,7 @@ class HelperClass(object):
 
     def add_quad(self,operator,leftOperand,rightOperand,result):
         self.quad.append({'operator':operator,'leftOperand':leftOperand,'rightOperand':rightOperand,'result':result})
+        self.cont = self.cont + 1
 
     def next(self):
         self.temp = self.temp + 1
@@ -154,3 +157,16 @@ class HelperClass(object):
                 if operator in self.sem_cube[left_type][right_type]:
                     return self.sem_cube[left_type][right_type][operator]
         return 'error'
+
+    def add_pJumps(self, jump):
+        self.pJumps.append(jump)
+
+    def pop_pJumps(self):
+        if (len(self.pJumps) > 0):
+            return self.pJumps.pop()
+
+    def get_cont(self):
+        return self.cont
+
+    def fill(self, line, value):
+        self.quad[line]['result'] = value
