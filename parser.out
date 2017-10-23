@@ -263,6 +263,7 @@ llamada_exp          : 49 52
 llamada_exp2         : 51
 llamada_id           : 47
 logicop              : 61
+lparen_factor        : 89
 main                 : 4
 main_1               : 20
 programa             : 0
@@ -1675,7 +1676,7 @@ state 86
     termino                        shift and go to state 96
     var_cte_b                      shift and go to state 114
 
-state 87
+state 88
 
     (95) condicion -> condicion_id LPAREN . super_exp rparen_condicion bloque condicion_2
     (60) super_exp -> . expresion super_exp_2
@@ -1723,7 +1724,7 @@ state 87
     var_cte_f                      shift and go to state 113
     var_cte_b                      shift and go to state 114
 
-state 88
+state 89
 
     (137) var_local_2_1 -> data_type ID .
 
@@ -1731,7 +1732,7 @@ state 88
     RPAREN          reduce using rule 137 (var_local_2_1 -> data_type ID .)
 
 
-state 89
+state 90
 
     (134) var_local -> LPAREN var_local_2 RPAREN .
 
@@ -1748,14 +1749,14 @@ state 89
     END             reduce using rule 134 (var_local -> LPAREN var_local_2 RPAREN .)
 
 
-state 90
+state 91
 
     (135) var_local_2 -> var_local_2_1 var_local_3 .
 
     RPAREN          reduce using rule 135 (var_local_2 -> var_local_2_1 var_local_3 .)
 
 
-state 91
+state 92
 
     (138) var_local_3 -> COMMA . var_local_2
     (135) var_local_2 -> . var_local_2_1 var_local_3
@@ -1776,14 +1777,14 @@ state 91
     data_type                      shift and go to state 55
     empty                          shift and go to state 58
 
-state 92
+state 93
 
     (139) var_local_3 -> empty .
 
     RPAREN          reduce using rule 139 (var_local_3 -> empty .)
 
 
-state 93
+state 94
 
     (21) main_1 -> MAIN LPAREN RPAREN .
 
@@ -1799,14 +1800,14 @@ state 93
     END             reduce using rule 21 (main_1 -> MAIN LPAREN RPAREN .)
 
 
-state 94
+state 95
 
     (20) main -> main_1 bloque END .
 
     $end            reduce using rule 20 (main -> main_1 bloque END .)
 
 
-state 95
+state 96
 
     (94) factor -> var_cte .
 
@@ -1829,7 +1830,7 @@ state 95
     RPAREN          reduce using rule 94 (factor -> var_cte .)
 
 
-state 96
+state 97
 
     (72) exp -> termino . exp_2
     (73) exp_2 -> . addop exp
@@ -1857,7 +1858,7 @@ state 96
     empty                          shift and go to state 148
     exp_2                          shift and go to state 147
 
-state 97
+state 98
 
     (85) var_cte_b -> TRUE .
 
@@ -1880,7 +1881,7 @@ state 97
     RPAREN          reduce using rule 85 (var_cte_b -> TRUE .)
 
 
-state 98
+state 99
 
     (141) addop -> MINUS .
 
@@ -1894,14 +1895,14 @@ state 98
     MINUS           reduce using rule 141 (addop -> MINUS .)
 
 
-state 99
+state 100
 
     (43) vars2 -> asignacion_equal super_exp . SEMICOLON
 
     SEMICOLON       shift and go to state 149
 
 
-state 100
+state 101
 
     (78) var_cte -> var_cte_1 .
 
@@ -1924,7 +1925,7 @@ state 100
     RPAREN          reduce using rule 78 (var_cte -> var_cte_1 .)
 
 
-state 101
+state 102
 
     (82) var_cte -> llamada .
 
@@ -1947,7 +1948,7 @@ state 101
     RPAREN          reduce using rule 82 (var_cte -> llamada .)
 
 
-state 102
+state 103
 
     (140) addop -> PLUS .
 
@@ -1961,7 +1962,7 @@ state 102
     MINUS           reduce using rule 140 (addop -> PLUS .)
 
 
-state 103
+state 104
 
     (75) termino -> factor . termino_2
     (76) termino_2 -> . timesop termino
@@ -1993,7 +1994,7 @@ state 103
     timesop                        shift and go to state 151
     empty                          shift and go to state 155
 
-state 104
+state 105
 
     (84) var_cte_f -> CTE_F .
 
@@ -2016,7 +2017,7 @@ state 104
     RPAREN          reduce using rule 84 (var_cte_f -> CTE_F .)
 
 
-state 105
+state 106
 
     (93) factor -> addop . var_cte
     (78) var_cte -> . var_cte_1
@@ -2046,7 +2047,7 @@ state 105
     var_cte_f                      shift and go to state 113
     var_cte_b                      shift and go to state 114
 
-state 106
+state 107
 
     (83) var_cte_i -> CTE_I .
 
@@ -2069,7 +2070,7 @@ state 106
     RPAREN          reduce using rule 83 (var_cte_i -> CTE_I .)
 
 
-state 107
+state 108
 
     (92) factor -> LPAREN . super_exp RPAREN
     (60) super_exp -> . expresion super_exp_2
@@ -2117,7 +2118,7 @@ state 107
     var_cte_f                      shift and go to state 113
     var_cte_b                      shift and go to state 114
 
-state 108
+state 109
 
     (87) var_cte_1 -> ID . var_cte_2
     (48) llamada_id -> ID .
@@ -2148,7 +2149,7 @@ state 108
     empty                          shift and go to state 160
     var_cte_2                      shift and go to state 158
 
-state 109
+state 110
 
     (60) super_exp -> expresion . super_exp_2
     (61) super_exp_2 -> . logicop super_exp_2
@@ -2167,7 +2168,7 @@ state 109
     super_exp_2                    shift and go to state 162
     empty                          shift and go to state 165
 
-state 110
+state 111
 
     (86) var_cte_b -> FALSE .
 
@@ -2304,7 +2305,7 @@ state 115
     global_1                       shift and go to state 67
     empty                          shift and go to state 68
 
-state 116
+state 117
 
     (46) vars3 -> SEMICOLON .
 
@@ -2325,7 +2326,7 @@ state 116
     ELSE            reduce using rule 46 (vars3 -> SEMICOLON .)
 
 
-state 117
+state 118
 
     (45) vars3 -> EQUAL . def_array SEMICOLON
     (54) def_array -> . LBRACKET def_array_2
@@ -2334,7 +2335,7 @@ state 117
 
     def_array                      shift and go to state 177
 
-state 118
+state 119
 
     (39) vars_aux -> array ID vars3 .
 
@@ -2355,21 +2356,21 @@ state 118
     ELSE            reduce using rule 39 (vars_aux -> array ID vars3 .)
 
 
-state 119
+state 120
 
     (40) array -> ARRAY LESS data_type . COMMA CTE_I array_2 GREATER
 
     COMMA           shift and go to state 178
 
 
-state 120
+state 121
 
     (35) vars -> DRAW ID EQUAL . NEWDRAW LPAREN RPAREN SEMICOLON
 
     NEWDRAW         shift and go to state 179
 
 
-state 121
+state 122
 
     (28) asignacion -> asignacion_id asignacion_2 SEMICOLON .
 
@@ -2387,7 +2388,7 @@ state 121
     ELSE            reduce using rule 28 (asignacion -> asignacion_id asignacion_2 SEMICOLON .)
 
 
-state 122
+state 123
 
     (31) asignacion_2 -> LBRACKET exp . asignacion_3 EQUAL super_exp
     (33) asignacion_3 -> . RBRACKET
@@ -2398,56 +2399,56 @@ state 122
 
     asignacion_3                   shift and go to state 180
 
-state 123
+state 124
 
     (30) asignacion_2 -> asignacion_equal super_exp .
 
     SEMICOLON       reduce using rule 30 (asignacion_2 -> asignacion_equal super_exp .)
 
 
-state 124
+state 125
 
     (123) for -> for_init LPAREN CTE_I . COMMA CTE_I COMMA CTE_I RPAREN bloque for_end
 
     COMMA           shift and go to state 183
 
 
-state 125
+state 126
 
     (131) funcion_2 -> RETURN super_exp . SEMICOLON funcion_end
 
     SEMICOLON       shift and go to state 184
 
 
-state 126
+state 127
 
     (126) while -> while_init LPAREN super_exp . RPAREN bloque while_end
 
     RPAREN          shift and go to state 185
 
 
-state 127
+state 128
 
     (113) accion_nombre -> RIGHT .
 
     LPAREN          reduce using rule 113 (accion_nombre -> RIGHT .)
 
 
-state 128
+state 129
 
     (115) accion_nombre -> HIDE .
 
     LPAREN          reduce using rule 115 (accion_nombre -> HIDE .)
 
 
-state 129
+state 130
 
     (122) accion_nombre -> SETCOLOR .
 
     LPAREN          reduce using rule 122 (accion_nombre -> SETCOLOR .)
 
 
-state 130
+state 131
 
     (104) accion -> ID POINT accion_nombre . accion_params SEMICOLON
     (105) accion_params -> . LPAREN accion_params_2
@@ -2456,70 +2457,70 @@ state 130
 
     accion_params                  shift and go to state 187
 
-state 131
+state 132
 
     (117) accion_nombre -> CLEAR .
 
     LPAREN          reduce using rule 117 (accion_nombre -> CLEAR .)
 
 
-state 132
+state 133
 
     (118) accion_nombre -> SHOW .
 
     LPAREN          reduce using rule 118 (accion_nombre -> SHOW .)
 
 
-state 133
+state 134
 
     (119) accion_nombre -> BACK .
 
     LPAREN          reduce using rule 119 (accion_nombre -> BACK .)
 
 
-state 134
+state 135
 
     (116) accion_nombre -> SQUARE .
 
     LPAREN          reduce using rule 116 (accion_nombre -> SQUARE .)
 
 
-state 135
+state 136
 
     (112) accion_nombre -> CIRCLE .
 
     LPAREN          reduce using rule 112 (accion_nombre -> CIRCLE .)
 
 
-state 136
+state 137
 
     (121) accion_nombre -> FORWARD .
 
     LPAREN          reduce using rule 121 (accion_nombre -> FORWARD .)
 
 
-state 137
+state 138
 
     (111) accion_nombre -> SETPOSITION .
 
     LPAREN          reduce using rule 111 (accion_nombre -> SETPOSITION .)
 
 
-state 138
+state 139
 
     (120) accion_nombre -> SPEED .
 
     LPAREN          reduce using rule 120 (accion_nombre -> SPEED .)
 
 
-state 139
+state 140
 
     (114) accion_nombre -> LEFT .
 
     LPAREN          reduce using rule 114 (accion_nombre -> LEFT .)
 
 
-state 140
+state 141
 
     (47) llamada -> llamada_id LPAREN llamada_2 .
 
@@ -2601,7 +2602,7 @@ state 145
     RPAREN          reduce using rule 138 (var_local_3 -> COMMA var_local_2 .)
 
 
-state 146
+state 147
 
     (73) exp_2 -> addop . exp
     (72) exp -> . termino exp_2
@@ -2681,7 +2682,7 @@ state 148
     RPAREN          reduce using rule 74 (exp_2 -> empty .)
 
 
-state 149
+state 150
 
     (43) vars2 -> asignacion_equal super_exp SEMICOLON .
 
@@ -2702,7 +2703,7 @@ state 149
     ELSE            reduce using rule 43 (vars2 -> asignacion_equal super_exp SEMICOLON .)
 
 
-state 150
+state 151
 
     (75) termino -> factor termino_2 .
 
@@ -2722,7 +2723,7 @@ state 150
     COMMA           reduce using rule 75 (termino -> factor termino_2 .)
 
 
-state 151
+state 152
 
     (76) termino_2 -> timesop . termino
     (75) termino -> . factor termino_2
@@ -2764,7 +2765,7 @@ state 151
     var_cte_b                      shift and go to state 114
     var_cte_i                      shift and go to state 111
 
-state 152
+state 153
 
     (143) timesop -> DIVIDE .
 
@@ -2778,7 +2779,7 @@ state 152
     FALSE           reduce using rule 143 (timesop -> DIVIDE .)
 
 
-state 153
+state 154
 
     (144) timesop -> PERCENT .
 
@@ -2792,7 +2793,7 @@ state 153
     FALSE           reduce using rule 144 (timesop -> PERCENT .)
 
 
-state 154
+state 155
 
     (142) timesop -> TIMES .
 
@@ -2855,6 +2856,7 @@ state 157
 
     RPAREN          shift and go to state 196
 
+    accion_params                  shift and go to state 196
 
 state 158
 
@@ -3061,7 +3063,7 @@ state 169
     FALSE           reduce using rule 70 (relop -> DEQUAL .)
 
 
-state 170
+state 171
 
     (71) relop -> DISTINT .
 
@@ -3075,7 +3077,7 @@ state 170
     FALSE           reduce using rule 71 (relop -> DISTINT .)
 
 
-state 171
+state 172
 
     (63) expresion -> exp expresion_2 .
 
@@ -3086,7 +3088,7 @@ state 171
     COMMA           reduce using rule 63 (expresion -> exp expresion_2 .)
 
 
-state 172
+state 173
 
     (69) relop -> LESSEQUAL .
 
@@ -3110,6 +3112,8 @@ state 173
     RPAREN          reduce using rule 65 (expresion_2 -> empty .)
     COMMA           reduce using rule 65 (expresion_2 -> empty .)
 
+    llamada_exp2                   shift and go to state 199
+    empty                          shift and go to state 201
 
 state 174
 
@@ -3213,21 +3217,21 @@ state 178
     CTE_I           shift and go to state 205
 
 
-state 179
+state 180
 
     (35) vars -> DRAW ID EQUAL NEWDRAW . LPAREN RPAREN SEMICOLON
 
     LPAREN          shift and go to state 206
 
 
-state 180
+state 181
 
     (31) asignacion_2 -> LBRACKET exp asignacion_3 . EQUAL super_exp
 
     EQUAL           shift and go to state 207
 
 
-state 181
+state 182
 
     (34) asignacion_3 -> COMMA . exp RBRACKET
     (72) exp -> . termino exp_2
@@ -3271,21 +3275,21 @@ state 181
     var_cte_b                      shift and go to state 114
     var_cte_i                      shift and go to state 111
 
-state 182
+state 183
 
     (33) asignacion_3 -> RBRACKET .
 
     EQUAL           reduce using rule 33 (asignacion_3 -> RBRACKET .)
 
 
-state 183
+state 184
 
     (123) for -> for_init LPAREN CTE_I COMMA . CTE_I COMMA CTE_I RPAREN bloque for_end
 
     CTE_I           shift and go to state 209
 
 
-state 184
+state 186
 
     (131) funcion_2 -> RETURN super_exp SEMICOLON . funcion_end
     (133) funcion_end -> . END
@@ -3294,7 +3298,7 @@ state 184
 
     funcion_end                    shift and go to state 210
 
-state 185
+state 187
 
     (126) while -> while_init LPAREN super_exp RPAREN . bloque while_end
     (11) bloque -> . estatuto bloque
@@ -3361,7 +3365,7 @@ state 185
     llamada_id                     shift and go to state 53
     condicion_id                   shift and go to state 54
 
-state 186
+state 188
 
     (105) accion_params -> LPAREN . accion_params_2
     (106) accion_params_2 -> . accion_params_cte RPAREN
@@ -3397,21 +3401,21 @@ state 186
     var_cte_f                      shift and go to state 113
     var_cte_b                      shift and go to state 114
 
-state 187
+state 189
 
     (104) accion -> ID POINT accion_nombre accion_params . SEMICOLON
 
     SEMICOLON       shift and go to state 216
 
 
-state 188
+state 190
 
     (51) llamada_exp -> super_exp llamada_exp2 .
 
     RPAREN          reduce using rule 51 (llamada_exp -> super_exp llamada_exp2 .)
 
 
-state 189
+state 191
 
     (52) llamada_exp2 -> COMMA . llamada_exp
     (51) llamada_exp -> . super_exp llamada_exp2
@@ -3461,14 +3465,14 @@ state 189
     var_cte_f                      shift and go to state 113
     var_cte_b                      shift and go to state 114
 
-state 190
+state 192
 
     (53) llamada_exp2 -> empty .
 
     RPAREN          reduce using rule 53 (llamada_exp2 -> empty .)
 
 
-state 191
+state 193
 
     (49) llamada_2 -> llamada_exp RPAREN .
 
@@ -3491,7 +3495,7 @@ state 191
     RPAREN          reduce using rule 49 (llamada_2 -> llamada_exp RPAREN .)
 
 
-state 192
+state 194
 
     (96) rparen_condicion -> RPAREN .
 
@@ -3508,7 +3512,7 @@ state 192
     ELSE            reduce using rule 96 (rparen_condicion -> RPAREN .)
 
 
-state 193
+state 195
 
     (95) condicion -> condicion_id LPAREN super_exp rparen_condicion . bloque condicion_2
     (11) bloque -> . estatuto bloque
@@ -3576,7 +3580,7 @@ state 193
     while                          shift and go to state 52
     llamada_id                     shift and go to state 53
 
-state 194
+state 196
 
     (73) exp_2 -> addop exp .
 
@@ -3594,7 +3598,7 @@ state 194
     RPAREN          reduce using rule 73 (exp_2 -> addop exp .)
 
 
-state 195
+state 197
 
     (76) termino_2 -> timesop termino .
 
@@ -3614,7 +3618,7 @@ state 195
     RPAREN          reduce using rule 76 (termino_2 -> timesop termino .)
 
 
-state 196
+state 198
 
     (92) factor -> LPAREN super_exp RPAREN .
 
@@ -3637,7 +3641,7 @@ state 196
     RPAREN          reduce using rule 92 (factor -> LPAREN super_exp RPAREN .)
 
 
-state 197
+state 199
 
     (88) var_cte_2 -> LBRACKET exp . var_cte_3
     (90) var_cte_3 -> . RBRACKET
@@ -3648,7 +3652,7 @@ state 197
 
     var_cte_3                      shift and go to state 221
 
-state 198
+state 200
 
     (61) super_exp_2 -> logicop super_exp_2 .
 
@@ -3657,7 +3661,7 @@ state 198
     COMMA           reduce using rule 61 (super_exp_2 -> logicop super_exp_2 .)
 
 
-state 199
+state 201
 
     (64) expresion_2 -> relop exp .
 
@@ -3668,21 +3672,21 @@ state 199
     COMMA           reduce using rule 64 (expresion_2 -> relop exp .)
 
 
-state 200
+state 202
 
     (55) def_array_2 -> def_array_cte . RBRACKET
 
     RBRACKET        shift and go to state 222
 
 
-state 201
+state 203
 
     (54) def_array -> LBRACKET def_array_2 .
 
     SEMICOLON       reduce using rule 54 (def_array -> LBRACKET def_array_2 .)
 
 
-state 202
+state 204
 
     (57) def_array_cte -> var_cte . def_array_cte_2
     (58) def_array_cte_2 -> . COMMA def_array_cte
@@ -3695,14 +3699,14 @@ state 202
     def_array_cte_2                shift and go to state 224
     empty                          shift and go to state 225
 
-state 203
+state 205
 
     (56) def_array_2 -> RBRACKET .
 
     SEMICOLON       reduce using rule 56 (def_array_2 -> RBRACKET .)
 
 
-state 204
+state 206
 
     (45) vars3 -> EQUAL def_array SEMICOLON .
 
@@ -3723,7 +3727,7 @@ state 204
     ELSE            reduce using rule 45 (vars3 -> EQUAL def_array SEMICOLON .)
 
 
-state 205
+state 207
 
     (40) array -> ARRAY LESS data_type COMMA CTE_I . array_2 GREATER
     (41) array_2 -> . COMMA CTE_I
@@ -3736,7 +3740,7 @@ state 205
     array_2                        shift and go to state 226
     empty                          shift and go to state 228
 
-state 206
+state 208
 
     (35) vars -> DRAW ID EQUAL NEWDRAW LPAREN . RPAREN SEMICOLON
 
@@ -3798,14 +3802,14 @@ state 208
     RBRACKET        shift and go to state 231
 
 
-state 209
+state 211
 
     (123) for -> for_init LPAREN CTE_I COMMA CTE_I . COMMA CTE_I RPAREN bloque for_end
 
     COMMA           shift and go to state 232
 
 
-state 210
+state 212
 
     (131) funcion_2 -> RETURN super_exp SEMICOLON funcion_end .
 
@@ -3813,7 +3817,7 @@ state 210
     MAIN            reduce using rule 131 (funcion_2 -> RETURN super_exp SEMICOLON funcion_end .)
 
 
-state 211
+state 213
 
     (126) while -> while_init LPAREN super_exp RPAREN bloque . while_end
     (128) while_end -> . END
@@ -3822,21 +3826,21 @@ state 211
 
     while_end                      shift and go to state 233
 
-state 212
+state 214
 
     (107) accion_params_2 -> RPAREN .
 
     SEMICOLON       reduce using rule 107 (accion_params_2 -> RPAREN .)
 
 
-state 213
+state 215
 
     (106) accion_params_2 -> accion_params_cte . RPAREN
 
     RPAREN          shift and go to state 235
 
 
-state 214
+state 216
 
     (108) accion_params_cte -> var_cte . accion_params_cte_2
     (109) accion_params_cte_2 -> . COMMA accion_params_cte
@@ -3849,7 +3853,7 @@ state 214
     accion_params_cte_2            shift and go to state 236
     empty                          shift and go to state 238
 
-state 215
+state 217
 
     (105) accion_params -> LPAREN accion_params_2 .
 
@@ -4046,49 +4050,49 @@ state 226
     GREATER         shift and go to state 246
 
 
-state 227
+state 229
 
     (41) array_2 -> COMMA . CTE_I
 
     CTE_I           shift and go to state 247
 
 
-state 228
+state 230
 
     (42) array_2 -> empty .
 
     GREATER         reduce using rule 42 (array_2 -> empty .)
 
 
-state 229
+state 231
 
     (35) vars -> DRAW ID EQUAL NEWDRAW LPAREN RPAREN . SEMICOLON
 
     SEMICOLON       shift and go to state 248
 
 
-state 230
+state 232
 
     (31) asignacion_2 -> LBRACKET exp asignacion_3 EQUAL super_exp .
 
     SEMICOLON       reduce using rule 31 (asignacion_2 -> LBRACKET exp asignacion_3 EQUAL super_exp .)
 
 
-state 231
+state 233
 
     (34) asignacion_3 -> COMMA exp RBRACKET .
 
     EQUAL           reduce using rule 34 (asignacion_3 -> COMMA exp RBRACKET .)
 
 
-state 232
+state 234
 
     (123) for -> for_init LPAREN CTE_I COMMA CTE_I COMMA . CTE_I RPAREN bloque for_end
 
     CTE_I           shift and go to state 249
 
 
-state 233
+state 235
 
     (126) while -> while_init LPAREN super_exp RPAREN bloque while_end .
 
@@ -4106,7 +4110,7 @@ state 233
     ELSE            reduce using rule 126 (while -> while_init LPAREN super_exp RPAREN bloque while_end .)
 
 
-state 234
+state 236
 
     (128) while_end -> END .
 
@@ -4124,7 +4128,7 @@ state 234
     ELSE            reduce using rule 128 (while_end -> END .)
 
 
-state 235
+state 237
 
     (106) accion_params_2 -> accion_params_cte RPAREN .
 

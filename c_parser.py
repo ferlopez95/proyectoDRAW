@@ -368,7 +368,6 @@ def p_factor(p):
                 drawCompiler.erase_dir_func()
                 print("Type Mismatch in line " + str(p.lexer.lineno))
                 raise SyntaxError
-        
 
 def p_condicion(p):
     '''condicion : condicion_id LPAREN super_exp rparen_condicion bloque condicion_2'''
