@@ -133,6 +133,12 @@ class HelperClass(object):
         else:
             return -1
 
+    def top_pType(self):
+        if (len(self.pType) > 0):
+            return self.pType[len(self.pType)-1]
+        else:
+            return -1
+
     def get_type(self, id):
         if (id in self.vars_table()) :
             return self.vars_table()[id]['type']

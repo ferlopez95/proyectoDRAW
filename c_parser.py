@@ -450,9 +450,43 @@ def p_accion_llamada(p):
     pass
 
 def p_for(p):
-    '''for : for_init LPAREN CTE_I COMMA CTE_I COMMA CTE_I RPAREN bloque for_end'''
+    '''for : for_init LPAREN for_exp COMMA for_exp COMMA for_exp2 for_rparen bloque for_end'''
     pass
 
+def p_for_exp(p):
+    '''for_exp : exp'''
+    if (drawCompiler.top_pType() != "int" and drawCompiler.top_pType() != "float"):
+        print("Type Mismatch in line " +  str(p.lexer.lineno) + " expression should be int or float")
+        sys.exit(0)
+
+def p_for_exp2(p):
+    '''for_exp2 : exp'''
+    if (drawCompiler.top_pType() != "int" and drawCompiler.top_pType() != "float"):
+        print("Type Mismatch in line " +  str(p.lexer.lineno) + " expression should be int or float")
+        sys.exit(0)
+    else:
+        result3 = drawCompiler.pop_pilaO()
+        result2 = drawCompiler.pop_pilaO()
+        result1 = drawCompiler.pop_pilaO()
+        drawCompiler.add_quad('=',result1,-1,drawCompiler.next())
+        drawCompiler.add_pilaO(drawCompiler.temp)
+        drawCompiler.add_quad('=',result2,-1,drawCompiler.next())
+        drawCompiler.add_pilaO(drawCompiler.temp)
+        drawCompiler.add_quad('=',result3,-1,drawCompiler.next())
+        drawCompiler.add_pilaO(drawCompiler.temp)
+
+def p_for_rparen(p):
+    '''for_rparen : RPAREN'''
+    drawCompiler.add_pJumps(drawCompiler.get_cont()+1)
+    result3 = drawCompiler.pop_pilaO()
+    result2 = drawCompiler.pop_pilaO()
+    result1 = drawCompiler.pop_pilaO()
+    drawCompiler.add_quad('<=',result1,result2,drawCompiler.next())
+    drawCompiler.add_quad('Gotof',drawCompiler.temp,-1,-1)
+    drawCompiler.add_pilaO(result1)
+    drawCompiler.add_pilaO(result2)
+    drawCompiler.add_pilaO(result3)
+    
 def p_for_init(p):
     ''' for_init : FOR '''
     drawCompiler.add_inner_scope()
@@ -460,6 +494,16 @@ def p_for_init(p):
 def p_for_end(p):
     ''' for_end : END '''
     drawCompiler.pop_inner_scope()
+    returns = drawCompiler.pop_pJumps()
+    result3 = drawCompiler.pop_pilaO()
+    result2 = drawCompiler.pop_pilaO()
+    result1 = drawCompiler.pop_pilaO()
+    drawCompiler.add_quad('+',result1,result3,result1)
+    drawCompiler.add_quad('GOTO',-1,-1,returns)
+    drawCompiler.fill(returns, drawCompiler.get_cont()+1)
+    drawCompiler.pop_pType()
+    drawCompiler.pop_pType()
+    drawCompiler.pop_pType()
 
 def p_while(p):
     '''while : while_init LPAREN super_exp rparen_while bloque while_end'''
