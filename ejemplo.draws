@@ -8,4 +8,7 @@ main()
  else
     a = 2;
  end
+ while(a==b)
+  a = b * c;
+ end
 end

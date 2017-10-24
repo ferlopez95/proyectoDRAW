@@ -462,15 +462,31 @@ def p_for_end(p):
     drawCompiler.pop_inner_scope()
 
 def p_while(p):
-    '''while : while_init LPAREN super_exp RPAREN bloque while_end'''
+    '''while : while_init LPAREN super_exp rparen_while bloque while_end'''
     pass
 
 def p_while_init(p):
     ''' while_init : WHILE '''
     drawCompiler.add_inner_scope()
+    drawCompiler.add_pJumps(drawCompiler.get_cont())
+
+def p_rparen_while(p):
+    '''rparen_while : RPAREN'''
+    exp_type = drawCompiler.pop_pType()
+    if(exp_type != 'boolean'):
+        print("Type Mismatch in line " +  str(p.lexer.lineno) + " expression should be boolean")
+        raise SyntaxError
+    else:
+        result = drawCompiler.pop_pilaO()
+        drawCompiler.add_quad("GotoF", result, -1, -1)
+        drawCompiler.add_pJumps(drawCompiler.get_cont()-1)
 
 def p_while_end(p):
     ''' while_end : END '''
+    end = drawCompiler.pop_pJumps()
+    returns = drawCompiler.pop_pJumps()
+    drawCompiler.add_quad("GOTO",-1,-1,returns)
+    drawCompiler.fill(end, drawCompiler.get_cont())
     drawCompiler.pop_inner_scope()
 
 def p_funcion(p):
