@@ -1,4 +1,9 @@
-global int g;
+global int a;
+
+def int fun()
+	int a = 2;
+end
+
 main()
  int a;
  int b;
