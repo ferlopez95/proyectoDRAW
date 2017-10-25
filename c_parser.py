@@ -348,7 +348,7 @@ def p_var_cte_3(p):
     pass
 
 def p_factor(p):
-    '''factor : LPAREN super_exp RPAREN
+    '''factor : lparen_factor super_exp rparen_factor
     | addop var_cte
     | var_cte'''
     if (len(p) == 2 or len(p) == 3):
@@ -368,6 +368,14 @@ def p_factor(p):
                 drawCompiler.erase_dir_func()
                 print("Type Mismatch in line " + str(p.lexer.lineno))
                 raise SyntaxError
+
+def p_lparen_factor(p):
+    '''lparen_factor : LPAREN'''
+    drawCompiler.add_pOper(p[1])
+
+def p_rparen_factor(p):
+    '''rparen_factor : RPAREN'''
+    drawCompiler.pop_pOper()
 
 def p_condicion(p):
     '''condicion : condicion_id LPAREN super_exp rparen_condicion bloque condicion_2'''
