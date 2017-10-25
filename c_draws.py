@@ -18,7 +18,9 @@ if ( os.path.exists (a)):
     print(drawCompiler.pilaO)
     print(drawCompiler.pType)
     print(drawCompiler.pOper)
+    i = 1
     for quad in drawCompiler.quad : 
-        print (quad)
+        print (str(i) + ": " + str(quad))
+        i = i + 1
 else:
     print("El archivo no existe")
