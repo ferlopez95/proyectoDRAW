@@ -1,7 +1,7 @@
 global int a;
 
-def int fun()
-	int a = 2;
+def int fun(int b)
+	int a = b;
 end
 
 main()

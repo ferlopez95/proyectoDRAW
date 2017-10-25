@@ -65,13 +65,13 @@ class HelperClass(object):
 
     def exists_in_scope(self, id):
         if (len(self.inner_scopes()) >= 1):
-            if (id in self.vars_table()) or (id in self.global_vars()) :
+            if (id in self.vars_table()) :
                 return 1
             for key in self.inner_scopes():
                 if id in key:
                     return 1
         else:
-            if (id in self.vars_table()) or (id in self.global_vars()) :
+            if (id in self.vars_table()) :
                 return 1
 
     def add_var(self, type, id):
