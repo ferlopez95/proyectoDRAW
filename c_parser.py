@@ -17,7 +17,7 @@ def p_programa(p):
 
 def p_programa_end(p):
     ''' programa_end : empty '''
-    drawCompiler.erase_dir_func()
+    #drawCompiler.erase_dir_func()
 
 def p_funciones(p):
     '''funciones : funciones_2 main'''
@@ -67,6 +67,7 @@ def p_main_1(p):
     ''' main_1 : MAIN LPAREN RPAREN'''
     drawCompiler.actual_scope = p[1]
     drawCompiler.add_func("void", p[1])
+    drawCompiler.add_main_counter()
 
 def p_estatuto(p):
     '''estatuto : asignacion
@@ -549,12 +550,17 @@ def p_while_end(p):
 
 def p_funcion(p):
     '''funcion :  funcion_1 var_local bloque funcion_2'''
-    pass
+    drawCompiler.add_quad("ENDPROC", -1, -1, -1)
+
 
 def p_funcion_1(p):
     '''funcion_1 :  DEF data_type_func ID'''
-    drawCompiler.actual_scope = p[3]
-    drawCompiler.add_func(p[2], p[3])
+    if drawCompiler.exists_func(p[3]):
+        print("La función " + str(p[3]) + " ya está definida")
+        sys.exit(0)
+    else:
+        drawCompiler.actual_scope = p[3]
+        drawCompiler.add_func(p[2], p[3])
 
 def p_funcion_2(p):
     '''funcion_2 : RETURN super_exp SEMICOLON funcion_end
@@ -567,7 +573,7 @@ def p_funcion_end(p):
 
 def p_var_local(p):
     '''var_local : LPAREN var_local_2 RPAREN'''
-    pass
+    drawCompiler.add_func_counter();
 
 def p_var_local_2(p):
     '''var_local_2 : var_local_2_1 var_local_3
@@ -580,6 +586,7 @@ def p_var_local_2_1(p):
         print("Error: La variable " + p[2] + " ya está definida (Línea " + str(p.lexer.lineno) + ")")
         sys.exit(0)
     else:
+        drawCompiler.add_param(p[1])
         drawCompiler.add_var(p[1], p[2])
 
 def p_var_local_3(p):

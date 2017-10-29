@@ -81,9 +81,23 @@ class HelperClass(object):
             self.inner_scopes().append(inner)
         else:
             self.vars_table()[id] = {'type' : type}
+        self.add_total_var()
+
+    def add_total_var(self):
+        self.dir_func[self.actual_scope]['total_vars'] += 1
 
     def add_func(self, type, id):
-        self.dir_func[id] = {'type' : type, 'vars' : {}, 'inner_scope' : []}
+        self.dir_func[id] = {'type' : type, 'parameters' : [], 'total_vars' : 0, 'vars' : {}, 'inner_scope' : [], 'counter' : 0}
+
+    def add_param(self, type):
+        self.dir_func[self.actual_scope]['parameters'].append(type)
+
+    def add_func_counter(self):
+        self.dir_func[self.actual_scope]['counter'] = self.get_cont()
+
+    def add_main_counter(self):
+        self.dir_func['main']['counter'] = self.get_cont() + 1
+
 
     def exists_func(self, id):
         return id in self.dir_func
