@@ -1,7 +1,16 @@
 global int a;
 
-def int fun(int b)
-    int a = b;
+def int fun(int k, boolean l)
+    int h = k;
+    int a;
+ int b;
+ int c = ((a + b) * 2) / a - 1;
+
+ boolean d = true;
+ 
+if (c < 10)
+    b = 1;
+end
 end
 
 main()
