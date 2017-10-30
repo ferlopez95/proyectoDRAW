@@ -104,7 +104,8 @@ class HelperClass(object):
         return self.dir_func['global']['vars']
 
     def erase_dir_func(self):
-        self.dir_func = {}
+        return 1
+        #self.dir_func = {}
 
     def add_pilaO(self, id):
         self.pilaO.append(id)

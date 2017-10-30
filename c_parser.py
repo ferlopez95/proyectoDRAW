@@ -544,7 +544,7 @@ def p_while_end(p):
     end = drawCompiler.pop_pJumps()
     returns = drawCompiler.pop_pJumps()
     drawCompiler.add_quad("GOTO",-1,-1,returns)
-    drawCompiler.fill(end, drawCompiler.get_cont())
+    drawCompiler.fill(end, drawCompiler.get_cont()+1)
     drawCompiler.pop_inner_scope()
 
 def p_funcion(p):
