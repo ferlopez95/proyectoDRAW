@@ -10,6 +10,8 @@ class HelperClass(object):
         self.temp = 0
         self.pJumps = []
         self.cont = 0
+        self.param_k = 0
+        self.params = []
 
         self.sem_cube = {'int' : {'int' : {'+': 'int',
                                             '-': 'int',

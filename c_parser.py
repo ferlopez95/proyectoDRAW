@@ -55,8 +55,7 @@ def p_data_type(p):
 def p_data_type_func(p):
     '''data_type_func : INT
     | FLOAT
-    | BOOLEAN
-    | VOID'''
+    | BOOLEAN'''
     p[0] = p[1]
 
 def p_main(p):
@@ -181,28 +180,59 @@ def p_vars_3(p):
     pass
 
 def p_llamada(p):
-    '''llamada : llamada_id LPAREN llamada_2'''
-    pass
+    '''llamada : llamada_id llamada_2'''
+    drawCompiler.add_quad("GOSUB",p[1],-1,-1)
+    drawCompiler.param_k = 0
+    if(drawCompiler.dir_func[p[1]]['type'] != "void"):
+        drawCompiler.add_pType(drawCompiler.dir_func[p[1]]['type'])
+        next_var = drawCompiler.next()
+        drawCompiler.add_quad("=",p[1],-1,next_var)
+        drawCompiler.add_pilaO(next_var)
 
 def p_llamada_id(p):
-    ''' llamada_id : ID '''
+    ''' llamada_id : ID LPAREN'''
     if not drawCompiler.exists_func(p[1]):
         print ("Error: La función " + p[1] + " no está definida (Línea " + str(p.lexer.lineno) + ")")
         sys.exit(0)
+    else:
+        drawCompiler.add_quad("ERA",p[1],"-1","-1")
+        drawCompiler.param_k = 0
+        drawCompiler.params = drawCompiler.dir_func[p[1]]['parameters']
+        p[0] = p[1]
 
 def p_llamada_2(p):
-    '''llamada_2 : llamada_exp RPAREN
-    | RPAREN'''
+    '''llamada_2 : llamada_exp llamada_rparen
+    | llamada_rparen'''
     pass
 
+def p_llamada_rparen(p):
+    '''llamada_rparen : RPAREN'''
+    if(drawCompiler.param_k != len(drawCompiler.params)-1):
+        print ("Error: Wrong number of parameters, Línea " + str(p.lexer.lineno) + ")")
+        sys.exit(0)
+        
 def p_llamada_exp(p):
-    '''llamada_exp : super_exp llamada_exp2'''
+    '''llamada_exp : llamada_super_exp llamada_exp2'''
     pass
+
+def p_llamada_super_exp(p):
+    '''llamada_super_exp : super_exp'''
+    argument = drawCompiler.pop_pilaO()
+    argumentType = drawCompiler.pop_pType()
+    if(argumentType == drawCompiler.params[drawCompiler.param_k]):
+        drawCompiler.add_quad("param",argument,-1,"param" + str(drawCompiler.param_k))
+    else:
+        print ("Error: Type Mismatch in Parameters, Línea " + str(p.lexer.lineno) + ")")
+        sys.exit(0) 
 
 def p_llamada_exp_2(p):
-    '''llamada_exp2 : COMMA llamada_exp
+    '''llamada_exp2 : llamada_comma llamada_exp
     | empty'''
     pass
+
+def p_llamada_comma(p):
+    '''llamada_comma : COMMA'''
+    drawCompiler.param_k = drawCompiler.param_k + 1
 
 def p_def_array(p):
     '''def_array : LBRACKET def_array_2 '''
@@ -414,7 +444,7 @@ def p_condicion_else(p):
     drawCompiler.add_quad("GOTO", -1, -1 ,-1)
     falso = drawCompiler.pop_pJumps()
     drawCompiler.add_pJumps(drawCompiler.get_cont()-1)
-    drawCompiler.fill(falso, drawCompiler.get_cont())
+    drawCompiler.fill(falso, drawCompiler.get_cont()+1)
 
 def p_condicion_end(p):
     ''' condicion_end : END '''
@@ -523,11 +553,11 @@ def p_for_end(p):
 def p_while(p):
     '''while : while_init LPAREN super_exp rparen_while bloque while_end'''
     pass
-
+    
 def p_while_init(p):
     ''' while_init : WHILE '''
     drawCompiler.add_inner_scope()
-    drawCompiler.add_pJumps(drawCompiler.get_cont())
+    drawCompiler.add_pJumps(drawCompiler.get_cont()+1)
 
 def p_rparen_while(p):
     '''rparen_while : RPAREN'''
@@ -549,23 +579,43 @@ def p_while_end(p):
     drawCompiler.pop_inner_scope()
 
 def p_funcion(p):
-    '''funcion :  funcion_1 var_local bloque funcion_2'''
+    '''funcion :  DEF funcion_aux '''
+    pass
+
+def p_funcion_aux(p):
+    ''' funcion_aux : funcion_1 var_local bloque funcion_2
+        | funcion_void var_local bloque funcion_end'''
     drawCompiler.add_quad("ENDPROC", -1, -1, -1)
 
-
-def p_funcion_1(p):
-    '''funcion_1 :  DEF data_type_func ID'''
-    if drawCompiler.exists_func(p[3]):
-        print("La función " + str(p[3]) + " ya está definida")
+def p_funcion_void(p):
+    '''funcion_void :  VOID ID'''
+    if drawCompiler.exists_func(p[2]):
+        print("La función " + str(p[2]) + " ya está definida")
         sys.exit(0)
     else:
-        drawCompiler.actual_scope = p[3]
-        drawCompiler.add_func(p[2], p[3])
+        drawCompiler.actual_scope = p[2]
+        drawCompiler.add_func(p[1], p[2])
+    
+def p_funcion_1(p):
+    '''funcion_1 :  data_type_func ID'''
+    if drawCompiler.exists_func(p[2]):
+        print("La función " + str(p[2]) + " ya está definida")
+        sys.exit(0)
+    else:
+        drawCompiler.actual_scope = p[2]
+        drawCompiler.add_func(p[1], p[2])
 
 def p_funcion_2(p):
-    '''funcion_2 : RETURN super_exp SEMICOLON funcion_end
-    | funcion_end'''
-    pass
+    '''funcion_2 : RETURN super_exp SEMICOLON END'''
+    result_type = drawCompiler.pop_pType()
+    func_type = drawCompiler.dir_func[drawCompiler.actual_scope]['type']
+    if (func_type == result_type):
+        result = drawCompiler.pop_pilaO()
+        drawCompiler.add_quad("RETURN",result,-1,-1)
+        drawCompiler.actual_scope = 'global'
+    else:
+        print("El valor de retorno de la función " + str(drawCompiler.actual_scope) + " no es correcto, como esperaba " + str(func_type) + " se regreso " + str(result_type))
+        sys.exit(0)
 
 def p_funcion_end(p):
     ''' funcion_end : END '''
@@ -621,7 +671,7 @@ def p_error(p):
         print ("Error en Sintaxis linea: " + str(p.lexer.lineno)+ "  Error de Contexto " + str(p.value))
     else:
         print ("Error en Lexico linea: " + str(c_lexer.lexer.lineno))
-
+    sys.exit(0)
 
 parser = yacc.yacc()
 
