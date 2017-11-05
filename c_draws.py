@@ -18,7 +18,7 @@ if ( os.path.exists (a)):
     print(drawCompiler.pilaO)
     print(drawCompiler.pType)
     print(drawCompiler.pOper)
-    print(drawCompiler.params)
+    print(drawCompiler.memoria)
     i = 1
     for quad in drawCompiler.quad : 
         print (str(i) + ": " + str(quad))

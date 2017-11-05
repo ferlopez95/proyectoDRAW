@@ -12,7 +12,7 @@ def int fun(int k, boolean l)
     b = 1;
  end
 
- return d;
+ return a;
 end
 
 main()

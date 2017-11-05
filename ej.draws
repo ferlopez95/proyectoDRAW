@@ -1,11 +1,14 @@
-global int g;
+global int l;
 main()
- int a;
- int b;
- int c = a * b;
- if(a == b)
-    a = c + b;
- else
- 	a = 2;
- end
+ int a = 2;
+ int b = 4;
+ int c = 2;
+ a = c;
+ b = c * a + b;
+ float d = 3.5;
+ float e = 2;
+ float f = 3.54;
+ boolean g = true;
+ boolean h = false;
+ boolean i = true;
 end

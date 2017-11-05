@@ -87,7 +87,8 @@ def p_asignacion_id(p):
         print ("Error: La variable " + p[1] + " no está definida (Línea " + str(p.lexer.lineno) + ")")
         sys.exit(0)
     else:
-        drawCompiler.add_pilaO(p[1])
+        dir_virtual = drawCompiler.next_var(drawCompiler.get_type(p[1]),p[1])
+        drawCompiler.add_pilaO(dir_virtual)
         drawCompiler.add_pType(drawCompiler.get_type(p[1]))
 
 def p_asignacion_2(p):
@@ -134,7 +135,8 @@ def p_vars_id(p):
         sys.exit(0)
     else:
         drawCompiler.add_var(p[1], p[2])
-        drawCompiler.add_pilaO(p[2])
+        dir_virtual = drawCompiler.next_var(p[1],p[2])
+        drawCompiler.add_pilaO(dir_virtual)
         drawCompiler.add_pType(p[1])
 
 def p_vars_aux(p):
@@ -185,7 +187,7 @@ def p_llamada(p):
     drawCompiler.param_k = 0
     if(drawCompiler.dir_func[p[1]]['type'] != "void"):
         drawCompiler.add_pType(drawCompiler.dir_func[p[1]]['type'])
-        next_var = drawCompiler.next()
+        next_var = drawCompiler.find_func(drawCompiler.dir_func[p[1]]['type'],p[1])
         drawCompiler.add_quad("=",p[1],-1,next_var)
         drawCompiler.add_pilaO(next_var)
 
@@ -270,7 +272,7 @@ def p_expresion(p):
         operator = drawCompiler.pop_pOper()
         result_type = drawCompiler.semantic_check(left_type,right_type,operator)
         if(result_type != 'error'):
-            result = drawCompiler.next()
+            result = drawCompiler.next_temp(result_type)
             drawCompiler.add_quad(operator,leftOperand,rightOperand,result)
             drawCompiler.add_pilaO(result)
             drawCompiler.add_pType(result_type)
@@ -303,7 +305,7 @@ def p_exp(p):
         operator = drawCompiler.pop_pOper()
         result_type = drawCompiler.semantic_check(left_type,right_type,operator)
         if(result_type != 'error'):
-            result = drawCompiler.next()
+            result = drawCompiler.next_temp(result_type)
             drawCompiler.add_quad(operator,leftOperand,rightOperand,result)
             drawCompiler.add_pilaO(result)
             drawCompiler.add_pType(result_type)
@@ -327,7 +329,7 @@ def p_termino(p):
         operator = drawCompiler.pop_pOper()
         result_type = drawCompiler.semantic_check(left_type,right_type,operator)
         if(result_type != 'error'):
-            result = drawCompiler.next()
+            result = drawCompiler.next_temp(result_type)
             drawCompiler.add_quad(operator,leftOperand,rightOperand,result)
             drawCompiler.add_pilaO(result)
             drawCompiler.add_pType(result_type)
@@ -351,18 +353,21 @@ def p_var_cte(p):
 
 def p_var_cte_i(p):
     ''' var_cte_i : CTE_I '''
-    drawCompiler.add_pilaO(p[1])
+    dir_virtual = drawCompiler.next_var_cte('int',p[1])
+    drawCompiler.add_pilaO(dir_virtual)
     drawCompiler.add_pType("int")
 
 def p_var_cte_f(p):
     ''' var_cte_f : CTE_F '''
-    drawCompiler.add_pilaO(p[1])
+    dir_virtual = drawCompiler.next_var_cte('float',p[1])
+    drawCompiler.add_pilaO(dir_virtual)
     drawCompiler.add_pType("float")
 
 def p_var_cte_b(p):
     ''' var_cte_b : TRUE
     | FALSE '''
-    drawCompiler.add_pilaO(p[1])
+    dir_virtual = drawCompiler.next_var_cte('boolean',p[1])
+    drawCompiler.add_pilaO(dir_virtual)
     drawCompiler.add_pType("boolean")
 
 def p_var_cte_1(p):
@@ -371,7 +376,8 @@ def p_var_cte_1(p):
         print ("Error: La variable " + p[1] + " no esta definida (Línea " + str(p.lexer.lineno) + ")")
         sys.exit(0)
     else:
-        drawCompiler.add_pilaO(p[1])
+        dir_virtual = drawCompiler.next_var(drawCompiler.get_type(p[1]),p[1])
+        drawCompiler.add_pilaO(dir_virtual)
         drawCompiler.add_pType(drawCompiler.get_type(p[1]))
 
 def p_var_cte_2(p):
@@ -397,7 +403,7 @@ def p_factor(p):
             operator = drawCompiler.pop_pOper()
             result_type = drawCompiler.semantic_check(left_type,right_type,operator)
             if(result_type != 'error'):
-                result = drawCompiler.next()
+                result = drawCompiler.next_temp(result_type)
                 drawCompiler.add_quad(operator,leftOperand,rightOperand,result)
                 drawCompiler.add_pilaO(result)
                 drawCompiler.add_pType(result_type)
@@ -513,12 +519,15 @@ def p_for_exp2(p):
         result3 = drawCompiler.pop_pilaO()
         result2 = drawCompiler.pop_pilaO()
         result1 = drawCompiler.pop_pilaO()
-        drawCompiler.add_quad('=',result1,-1,drawCompiler.next())
-        drawCompiler.add_pilaO(drawCompiler.temp)
-        drawCompiler.add_quad('=',result2,-1,drawCompiler.next())
-        drawCompiler.add_pilaO(drawCompiler.temp)
-        drawCompiler.add_quad('=',result3,-1,drawCompiler.next())
-        drawCompiler.add_pilaO(drawCompiler.temp)
+        next_var_for = drawCompiler.next_var_for()
+        drawCompiler.add_quad('=',result1,-1,next_var_for)
+        drawCompiler.add_pilaO(next_var_for)
+        next_var_for = drawCompiler.next_var_for()
+        drawCompiler.add_quad('=',result2,-1,next_var_for)
+        drawCompiler.add_pilaO(next_var_for)
+        next_var_for = drawCompiler.next_var_for()
+        drawCompiler.add_quad('=',result3,-1,next_var_for)
+        drawCompiler.add_pilaO(next_var_for)
 
 def p_for_rparen(p):
     '''for_rparen : RPAREN'''
@@ -526,8 +535,9 @@ def p_for_rparen(p):
     result3 = drawCompiler.pop_pilaO()
     result2 = drawCompiler.pop_pilaO()
     result1 = drawCompiler.pop_pilaO()
-    drawCompiler.add_quad('<=',result1,result2,drawCompiler.next())
-    drawCompiler.add_quad('Gotof',drawCompiler.temp,-1,-1)
+    next_var_for = drawCompiler.next_var_for()
+    drawCompiler.add_quad('<=',result1,result2,next_var_for)
+    drawCompiler.add_quad('Gotof',next_var_for,-1,-1)
     drawCompiler.add_pilaO(result1)
     drawCompiler.add_pilaO(result2)
     drawCompiler.add_pilaO(result3)
@@ -604,6 +614,7 @@ def p_funcion_1(p):
     else:
         drawCompiler.actual_scope = p[2]
         drawCompiler.add_func(p[1], p[2])
+        drawCompiler.next_func(p[1],p[2])
 
 def p_funcion_2(p):
     '''funcion_2 : RETURN super_exp SEMICOLON END'''
@@ -613,13 +624,15 @@ def p_funcion_2(p):
         result = drawCompiler.pop_pilaO()
         drawCompiler.add_quad("RETURN",result,-1,-1)
         drawCompiler.actual_scope = 'global'
+        drawCompiler.erase_temps()
     else:
         print("El valor de retorno de la función " + str(drawCompiler.actual_scope) + " no es correcto, como esperaba " + str(func_type) + " se regreso " + str(result_type))
         sys.exit(0)
 
 def p_funcion_end(p):
     ''' funcion_end : END '''
-    drawCompiler.actual_scope = 'global'    
+    drawCompiler.actual_scope = 'global'
+    drawCompiler.erase_temps()
 
 def p_var_local(p):
     '''var_local : LPAREN var_local_2 RPAREN'''
@@ -636,6 +649,7 @@ def p_var_local_2_1(p):
         print("Error: La variable " + p[2] + " ya está definida (Línea " + str(p.lexer.lineno) + ")")
         sys.exit(0)
     else:
+        drawCompiler.next_var(p[1],p[2])
         drawCompiler.add_param(p[1])
         drawCompiler.add_var(p[1], p[2])
 

@@ -12,7 +12,19 @@ class HelperClass(object):
         self.cont = 0
         self.param_k = 0
         self.params = []
-
+        self.vgi = 4000
+        self.vgf = 6000
+        self.vgb = 8000
+        self.vli = 10000
+        self.vlf = 12000
+        self.vlb = 14000
+        self.tgi = 16000
+        self.tgf = 20000
+        self.tgb = 24000
+        self.ctei= 28000
+        self.ctef= 32000
+        self.cteb= 36000
+        
         self.sem_cube = {'int' : {'int' : {'+': 'int',
                                             '-': 'int',
                                             '/': 'float',
@@ -64,6 +76,11 @@ class HelperClass(object):
                          'boolean' : {'boolean' : {'&&' : 'boolean',
                                              '||' : 'boolean',
                                              '=' : 'boolean'}}}
+
+        self.memoria = {'Vgi':{},'Vgf':{},'Vgb':{},
+                        'Vli':{},'Vlf':{},'Vlb':{},
+                        'Tgi':{},'Tgf':{},'Tgb':{},
+                        'Ctei':{},'Ctef':{},'Cteb':{36000:'true',36001:'false'}}
 
     def exists_in_scope(self, id):
         if (len(self.inner_scopes()) >= 1):
@@ -174,6 +191,140 @@ class HelperClass(object):
         self.temp = self.temp + 1
         return self.temp
 
+    def next_temp(self,var_type):
+        if var_type == 'int':
+            var_avail = self.tgi
+            self.tgi = self.tgi + 1
+            return var_avail
+        elif var_type == 'float':
+            var_avail = self.tgf
+            self.tgf = self.tgf + 1
+            return var_avail
+        elif var_type == 'boolean':
+            var_avail = self.tgb
+            self.tgb = self.tgb + 1
+            return var_avail
+            
+    def next_var(self,var_type,cte):
+        if(self.actual_scope == "global"):
+            if var_type == 'int':
+                for dir_virtual, cte_val in self.memoria['Vgi'].items():
+                    if cte_val == cte:
+                        return dir_virtual
+                var_avail = self.vgi
+                self.vgi = self.vgi + 1
+                self.memoria['Vgi'][var_avail] = cte
+                return var_avail
+            elif var_type == 'float':
+                for dir_virtual, cte_val in self.memoria['Vgf'].items():
+                    if cte_val == cte:
+                        return dir_virtual
+                var_avail = self.vgf
+                self.vgf = self.vgf + 1
+                self.memoria['Vgf'][var_avail] = cte
+                return var_avail
+            elif var_type == 'boolean':
+                for dir_virtual, cte_val in self.memoria['Vgb'].items():
+                    if cte_val == cte:
+                        return dir_virtual
+                var_avail = self.vgb
+                self.vgb = self.vgb + 1
+                self.memoria['Vgb'][var_avail] = cte
+                return var_avail
+        else:
+            if var_type == 'int':
+                for dir_virtual, cte_val in self.memoria['Vli'].items():
+                    if cte_val == cte:
+                        return dir_virtual
+                var_avail = self.vli
+                self.vli = self.vli + 1
+                self.memoria['Vli'][var_avail] = cte
+                return var_avail
+            elif var_type == 'float':
+                for dir_virtual, cte_val in self.memoria['Vlf'].items():
+                    if cte_val == cte:
+                        return dir_virtual
+                var_avail = self.vlf
+                self.vlf = self.vlf + 1
+                self.memoria['Vlf'][var_avail] = cte
+                return var_avail
+            elif var_type == 'boolean':
+                for dir_virtual, cte_val in self.memoria['Vlb'].items():
+                    if cte_val == cte:
+                        return dir_virtual
+                var_avail = self.vlb
+                self.vlb = self.vlb + 1
+                self.memoria['Vlb'][var_avail] = cte
+                return var_avail
+
+    def next_var_cte(self,cte_type,cte):
+        if cte_type == 'int':
+            for dir_virtual, cte_val in self.memoria['Ctei'].items():
+                if cte_val == cte:
+                    return dir_virtual
+            cte_avail = self.ctei
+            self.ctei = self.ctei + 1
+            self.memoria['Ctei'][cte_avail] = cte
+            return cte_avail
+        elif cte_type == 'float':
+            for dir_virtual, cte_val in self.memoria['Ctef'].items():
+                if cte_val == cte:
+                    return dir_virtual
+            cte_avail = self.ctef
+            self.ctef = self.ctef + 1
+            self.memoria['Ctef'][cte_avail] = cte
+            return cte_avail
+        elif cte_type == 'boolean':
+            if(cte == 'true'):
+                return 36000
+            else:
+                return 36001
+
+    def next_var_for(self):
+        var_avail = self.tgf
+        self.tgf = self.tgf + 1
+        return var_avail
+
+    def next_func(self,var_type,cte):
+        if var_type == 'int':
+            for dir_virtual, cte_val in self.memoria['Vgi'].items():
+                if cte_val == cte:
+                    return dir_virtual
+            var_avail = self.vgi
+            self.vgi = self.vgi + 1
+            self.memoria['Vgi'][var_avail] = cte
+            return var_avail
+        elif var_type == 'float':
+            for dir_virtual, cte_val in self.memoria['Vgf'].items():
+                if cte_val == cte:
+                    return dir_virtual
+            var_avail = self.vgf
+            self.vgf = self.vgf + 1
+            self.memoria['Vgf'][var_avail] = cte
+            return var_avail
+        elif var_type == 'boolean':
+            for dir_virtual, cte_val in self.memoria['Vgb'].items():
+                if cte_val == cte:
+                    return dir_virtual
+            var_avail = self.vgb
+            self.vgb = self.vgb + 1
+            self.memoria['Vgb'][var_avail] = cte
+            return var_avail
+
+    def find_func(self,func_type,func_id):
+        if func_type == 'int':
+            for dir_virtual, cte_val in self.memoria['Vgi'].items():
+                if cte_val == func_id:
+                    return dir_virtual
+        elif func_type == 'float':
+            for dir_virtual, cte_val in self.memoria['Vgf'].items():
+                if cte_val == func_id:
+                    return dir_virtual
+        elif func_type == 'boolean':
+            for dir_virtual, cte_val in self.memoria['Vgb'].items():
+                if cte_val == func_id:
+                    return dir_virtual
+
     def semantic_check(self,left_type,right_type,operator):
         if left_type in self.sem_cube:
             if right_type in self.sem_cube[left_type]:
@@ -193,3 +344,11 @@ class HelperClass(object):
 
     def fill(self, line, value):
         self.quad[line]['result'] = value
+
+    def erase_temps(self):
+        self.vli = 10000
+        self.vlf = 12000
+        self.vlb = 14000
+        self.tgi = 16000
+        self.tgf = 20000
+        self.tgb = 24000
