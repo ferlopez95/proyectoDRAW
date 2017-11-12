@@ -1,3 +1,6 @@
+from SemanticCube import SemanticCube
+from MemoryManager import MemoryManager
+
 class HelperClass(object):
 
     def __init__(self, actual_scope):
@@ -12,6 +15,8 @@ class HelperClass(object):
         self.cont = 0
         self.param_k = 0
         self.params = []
+        self.sem_cube = SemanticCube().cube
+        self.memory_manager = MemoryManager()
         self.vgi = 4000
         self.vgf = 6000
         self.vgb = 8000
@@ -25,57 +30,7 @@ class HelperClass(object):
         self.ctef= 32000
         self.cteb= 36000
         
-        self.sem_cube = {'int' : {'int' : {'+': 'int',
-                                            '-': 'int',
-                                            '/': 'float',
-                                            '*': 'int',
-                                            '%': 'int',
-                                            '<': 'boolean',
-                                            '>': 'boolean',
-                                            '<=': 'boolean',
-                                            '>=': 'boolean',
-                                            '!=': 'boolean',
-                                            '==': 'boolean',
-                                            '=': 'int'},
-                                  'float': {'+': 'float',
-                                            '-': 'float',
-                                            '/': 'float',
-                                            '*': 'float',
-                                            '%': 'float',
-                                            '<': 'boolean',
-                                            '>': 'boolean',
-                                            '<=': 'boolean',
-                                            '>=': 'boolean',
-                                            '!=': 'boolean',
-                                            '==': 'boolean',
-                                            '=': 'int'}},
-                         'float' : {'int' : {'+': 'float',
-                                            '-': 'float',
-                                            '/': 'float',
-                                            '*': 'float',
-                                            '%': 'float',
-                                            '<': 'boolean',
-                                            '>': 'boolean',
-                                            '<=': 'boolean',
-                                            '>=': 'boolean',
-                                            '!=': 'boolean',
-                                            '==': 'boolean',
-                                             '=': 'float'},
-                                  'float': {'+': 'float',
-                                            '-': 'float',
-                                            '/': 'float',
-                                            '*': 'float',
-                                            '%': 'float',
-                                            '<': 'boolean',
-                                            '>': 'boolean',
-                                            '<=': 'boolean',
-                                            '>=': 'boolean',
-                                            '!=': 'boolean',
-                                            '==': 'boolean',
-                                            '=': 'float'}},
-                         'boolean' : {'boolean' : {'&&' : 'boolean',
-                                             '||' : 'boolean',
-                                             '=' : 'boolean'}}}
+        
 
         self.memoria = {'Vgi':{},'Vgf':{},'Vgb':{},
                         'Vli':{},'Vlf':{},'Vlb':{},
@@ -93,13 +48,13 @@ class HelperClass(object):
             if (id in self.vars_table()) :
                 return 1
 
-    def add_var(self, type, id):
+    def add_var(self, type, id, dir_virtual):
         if (len(self.inner_scopes()) >= 1):
             inner = self.inner_scopes().pop()
-            inner[id] = {'type' : type}
+            inner[id] = {'type' : type, 'dir_virtual' : dir_virtual}
             self.inner_scopes().append(inner)
         else:
-            self.vars_table()[id] = {'type' : type}
+            self.vars_table()[id] = {'type' : type, 'dir_virtual' : dir_virtual}
         self.add_total_var()
 
     def add_total_var(self):
@@ -193,97 +148,38 @@ class HelperClass(object):
 
     def next_temp(self,var_type):
         if var_type == 'int':
-            var_avail = self.tgi
-            self.tgi = self.tgi + 1
-            return var_avail
+            return self.memory_manager.mem_temp.next_int()
         elif var_type == 'float':
-            var_avail = self.tgf
-            self.tgf = self.tgf + 1
-            return var_avail
+            return self.memory_manager.mem_temp.next_float()
         elif var_type == 'boolean':
-            var_avail = self.tgb
-            self.tgb = self.tgb + 1
-            return var_avail
+            return self.memory_manager.mem_temp.next_boolean()
             
-    def next_var(self,var_type,cte):
+    def next_var(self,var_type):
         if(self.actual_scope == "global"):
             if var_type == 'int':
-                for dir_virtual, cte_val in self.memoria['Vgi'].items():
-                    if cte_val == cte:
-                        return dir_virtual
-                var_avail = self.vgi
-                self.vgi = self.vgi + 1
-                self.memoria['Vgi'][var_avail] = cte
-                return var_avail
+                return self.memory_manager.mem_global.next_int();
             elif var_type == 'float':
-                for dir_virtual, cte_val in self.memoria['Vgf'].items():
-                    if cte_val == cte:
-                        return dir_virtual
-                var_avail = self.vgf
-                self.vgf = self.vgf + 1
-                self.memoria['Vgf'][var_avail] = cte
-                return var_avail
+                return self.memory_manager.mem_global.next_float();
             elif var_type == 'boolean':
-                for dir_virtual, cte_val in self.memoria['Vgb'].items():
-                    if cte_val == cte:
-                        return dir_virtual
-                var_avail = self.vgb
-                self.vgb = self.vgb + 1
-                self.memoria['Vgb'][var_avail] = cte
-                return var_avail
+                return self.memory_manager.mem_global.next_boolean();
         else:
             if var_type == 'int':
-                for dir_virtual, cte_val in self.memoria['Vli'].items():
-                    if cte_val == cte:
-                        return dir_virtual
-                var_avail = self.vli
-                self.vli = self.vli + 1
-                self.memoria['Vli'][var_avail] = cte
-                return var_avail
+                return self.memory_manager.mem_local.next_int();
             elif var_type == 'float':
-                for dir_virtual, cte_val in self.memoria['Vlf'].items():
-                    if cte_val == cte:
-                        return dir_virtual
-                var_avail = self.vlf
-                self.vlf = self.vlf + 1
-                self.memoria['Vlf'][var_avail] = cte
-                return var_avail
+                return self.memory_manager.mem_local.next_float();
             elif var_type == 'boolean':
-                for dir_virtual, cte_val in self.memoria['Vlb'].items():
-                    if cte_val == cte:
-                        return dir_virtual
-                var_avail = self.vlb
-                self.vlb = self.vlb + 1
-                self.memoria['Vlb'][var_avail] = cte
-                return var_avail
+                return self.memory_manager.mem_local.next_boolean();
 
     def next_var_cte(self,cte_type,cte):
         if cte_type == 'int':
-            for dir_virtual, cte_val in self.memoria['Ctei'].items():
-                if cte_val == cte:
-                    return dir_virtual
-            cte_avail = self.ctei
-            self.ctei = self.ctei + 1
-            self.memoria['Ctei'][cte_avail] = cte
-            return cte_avail
+            return self.memory_manager.mem_const.next_int(cte);
         elif cte_type == 'float':
-            for dir_virtual, cte_val in self.memoria['Ctef'].items():
-                if cte_val == cte:
-                    return dir_virtual
-            cte_avail = self.ctef
-            self.ctef = self.ctef + 1
-            self.memoria['Ctef'][cte_avail] = cte
-            return cte_avail
+            return self.memory_manager.mem_const.next_int(cte);
         elif cte_type == 'boolean':
-            if(cte == 'true'):
-                return 36000
-            else:
-                return 36001
+            return self.memory_manager.mem_const.next_int(cte);
 
     def next_var_for(self):
-        var_avail = self.tgf
-        self.tgf = self.tgf + 1
-        return var_avail
+        return self.memory_manager.mem_temp.next_float()
 
     def next_func(self,var_type,cte):
         if var_type == 'int':
@@ -352,3 +248,6 @@ class HelperClass(object):
         self.tgi = 16000
         self.tgf = 20000
         self.tgb = 24000
+
+    def get_dir_virtual(self, id):
+        return self.dir_func[self.actual_scope]['vars'][id]['dir_virtual']

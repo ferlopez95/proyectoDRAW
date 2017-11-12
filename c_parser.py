@@ -87,7 +87,7 @@ def p_asignacion_id(p):
         print ("Error: La variable " + p[1] + " no está definida (Línea " + str(p.lexer.lineno) + ")")
         sys.exit(0)
     else:
-        dir_virtual = drawCompiler.next_var(drawCompiler.get_type(p[1]),p[1])
+        dir_virtual = drawCompiler.get_dir_virtual(p[1])
         drawCompiler.add_pilaO(dir_virtual)
         drawCompiler.add_pType(drawCompiler.get_type(p[1]))
 
@@ -134,8 +134,8 @@ def p_vars_id(p):
         print ("Error: La variable " + p[2] + " ya está definida (Línea " + str(p.lexer.lineno) + ")")
         sys.exit(0)
     else:
-        drawCompiler.add_var(p[1], p[2])
-        dir_virtual = drawCompiler.next_var(p[1],p[2])
+        dir_virtual = drawCompiler.next_var(p[1])
+        drawCompiler.add_var(p[1], p[2], dir_virtual)
         drawCompiler.add_pilaO(dir_virtual)
         drawCompiler.add_pType(p[1])
 
@@ -259,7 +259,7 @@ def p_super_exp(p):
     pass
 
 def p_super_exp_2(p):
-    '''super_exp_2 :  logicop super_exp_2
+    '''super_exp_2 :  logicop super_exp
     | empty'''
 
 def p_expresion(p):
@@ -376,7 +376,7 @@ def p_var_cte_1(p):
         print ("Error: La variable " + p[1] + " no esta definida (Línea " + str(p.lexer.lineno) + ")")
         sys.exit(0)
     else:
-        dir_virtual = drawCompiler.next_var(drawCompiler.get_type(p[1]),p[1])
+        dir_virtual = drawCompiler.get_dir_virtual(p[1])
         drawCompiler.add_pilaO(dir_virtual)
         drawCompiler.add_pType(drawCompiler.get_type(p[1]))
 
@@ -649,9 +649,9 @@ def p_var_local_2_1(p):
         print("Error: La variable " + p[2] + " ya está definida (Línea " + str(p.lexer.lineno) + ")")
         sys.exit(0)
     else:
-        drawCompiler.next_var(p[1],p[2])
+        dir_virtual = drawCompiler.next_var(p[1])
         drawCompiler.add_param(p[1])
-        drawCompiler.add_var(p[1], p[2])
+        drawCompiler.add_var(p[1], p[2], dir_virtual)
 
 def p_var_local_3(p):
     '''var_local_3 : COMMA var_local_2
