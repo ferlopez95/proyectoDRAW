@@ -37,6 +37,41 @@ class HelperClass(object):
                         'Tgi':{},'Tgf':{},'Tgb':{},
                         'Ctei':{},'Ctef':{},'Cteb':{36000:'true',36001:'false'}}
 
+    def reset(self):
+        self.actual_scope = 'global'
+        self.dir_func = {}
+        self.pOper = []
+        self.pType = []
+        self.pilaO = []
+        self.quad = []
+        self.temp = 0
+        self.pJumps = []
+        self.cont = 0
+        self.param_k = 0
+        self.params = []
+        self.sem_cube = SemanticCube().cube
+        self.memory_manager = MemoryManager()
+        self.vgi = 4000
+        self.vgf = 6000
+        self.vgb = 8000
+        self.vli = 10000
+        self.vlf = 12000
+        self.vlb = 14000
+        self.tgi = 16000
+        self.tgf = 20000
+        self.tgb = 24000
+        self.ctei= 28000
+        self.ctef= 32000
+        self.cteb= 36000
+        
+        
+
+        self.memoria = {'Vgi':{},'Vgf':{},'Vgb':{},
+                        'Vli':{},'Vlf':{},'Vlb':{},
+                        'Tgi':{},'Tgf':{},'Tgb':{},
+                        'Ctei':{},'Ctef':{},'Cteb':{36000:'true',36001:'false'}}
+
+
     def exists_in_scope(self, id):
         if (len(self.inner_scopes()) >= 1):
             if (id in self.vars_table()) :
@@ -174,9 +209,9 @@ class HelperClass(object):
         if cte_type == 'int':
             return self.memory_manager.mem_const.next_int(cte);
         elif cte_type == 'float':
-            return self.memory_manager.mem_const.next_int(cte);
+            return self.memory_manager.mem_const.next_float(cte);
         elif cte_type == 'boolean':
-            return self.memory_manager.mem_const.next_int(cte);
+            return self.memory_manager.mem_const.next_boolean(cte);
 
     def next_var_for(self):
         return self.memory_manager.mem_temp.next_float()

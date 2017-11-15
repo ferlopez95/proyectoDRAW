@@ -21,14 +21,22 @@ text_result = Text(root, height=25, width=80)
 
 ## Funcion para compilar el codigo
 def compile():
-	text_console.delete(1.0, END)	
-	code = text_code.get("1.0", END)
-	try:
-	  parser.parse(code)
-	except SystemExit as e:
-	  text_console.insert(END, str(e.message))
-	
+    drawCompiler.reset()
+    text_console.delete(1.0, END)   
+    code = text_code.get("1.0", END)
+    try:
+      parser.parse(code)
+    except SystemExit as e:
+      text_console.insert(END, str(e.message))
 
+def run():
+    compile()
+    for key, value in drawCompiler.dir_func.items() :
+        print(str(key) + " : " + str(value))
+    virtual = VirtualMachine(drawCompiler.quad, drawCompiler.memory_manager)
+    print(virtual.memory.mem_local.var_int)
+    print(virtual.memory.mem_local.var_float)
+    print(virtual.memory.mem_local.var_boolean)
 
 ## Menu
 menubar = Menu(root)
@@ -60,9 +68,9 @@ helpmenu.add_command(label="Help Index")
 helpmenu.add_command(label="About...")
 menubar.add_cascade(label="Help", menu=helpmenu)
 
-menubar.add_cascade(label="Compile", command= compile)
+menubar.add_command(label="Compile", command= compile)
 
-menubar.add_command(label="Run", command= compile)
+menubar.add_command(label="Run", command= run)
 
 root.config(menu=menubar)
 

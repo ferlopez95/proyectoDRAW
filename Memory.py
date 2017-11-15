@@ -12,6 +12,10 @@ class Memory:
         self.boolean = boolean
         self.boolean_limit = boolean_limit
 
+        if (boolean == 36000):
+            self.var_boolean[36000] = True
+            self.var_boolean[36001] = False
+
     def next_int(self):
         actual = self.int
         self.int += 1
