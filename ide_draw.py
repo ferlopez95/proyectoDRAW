@@ -26,6 +26,10 @@ class RedirectText(object):
     def write(self, string):
         self.output.insert(END, string)
 
+## Redirecciona output de consola a el IDE
+redir = RedirectText(text_console)
+sys.stdout = redir
+
 ## Funcion para compilar el codigo
 def compile():
     drawCompiler.reset()
@@ -38,8 +42,6 @@ def compile():
       text_console.insert(END, str(e.message))
 
 def run():
-    redir = RedirectText(text_console)
-    sys.stdout = redir
     compile()
     virtual = VirtualMachine(drawCompiler.quad, drawCompiler.memory_manager)
     print("Cuadruplos")
