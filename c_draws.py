@@ -17,6 +17,11 @@ if ( os.path.exists (a)):
     
     for key, value in drawCompiler.dir_func.items() :
         print(str(key) + " : " + str(value))
+    print("Cuadruplos")
+    i = 0
+    for quad in drawCompiler.quad :
+        print(str(i) + " " + str(quad))
+        i += 1
     #print(drawCompiler.pilaO)
     #print(drawCompiler.pType)
     #print(drawCompiler.pOper)

@@ -15,9 +15,13 @@ drawCompiler.add_func('void', 'global')
 
 
 def p_programa(p):
-    '''programa : globales funciones programa_end
-    | funciones programa_end'''
-    pass
+    '''programa : init globales funciones programa_end
+    | init funciones programa_end'''
+
+def p_init(p):
+    ''' init : empty '''
+    drawCompiler.add_quad("GOTO", -1, -1,-1)
+    drawCompiler.add_pJumps(drawCompiler.get_cont()-1)
 
 def p_programa_end(p):
     ''' programa_end : empty '''
@@ -71,6 +75,7 @@ def p_main_1(p):
     drawCompiler.actual_scope = p[1]
     drawCompiler.add_func("void", p[1])
     drawCompiler.add_main_counter()
+    drawCompiler.fill(drawCompiler.pop_pJumps(), drawCompiler.get_cont())
 
 def p_estatuto(p):
     '''estatuto : asignacion
@@ -78,8 +83,15 @@ def p_estatuto(p):
     | ciclo
     | accion
     | vars
-    | llamada SEMICOLON'''
+    | llamada SEMICOLON
+    | print'''
     pass
+
+def p_print(p):
+    ''' print : PRINT LPAREN super_exp RPAREN SEMICOLON '''
+    op = drawCompiler.pop_pilaO()
+    op_type = drawCompiler.pop_pType()
+    drawCompiler.add_quad("PRINT", op, -1, -1)
 
 def p_asignacion(p):
     '''asignacion : asignacion_id asignacion_2 SEMICOLON'''

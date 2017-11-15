@@ -63,7 +63,7 @@ class HelperClass(object):
         self.ctei= 28000
         self.ctef= 32000
         self.cteb= 36000
-        
+        self.add_func('void', 'global')
         
 
         self.memoria = {'Vgi':{},'Vgf':{},'Vgb':{},

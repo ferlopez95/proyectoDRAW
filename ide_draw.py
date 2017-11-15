@@ -2,9 +2,9 @@
 import c_lexer
 import c_parser
 import os
+import turtle
 from VirtualMachine import VirtualMachine
 from Tkinter import *
-
 
 parser = c_parser.parser
 drawCompiler = c_parser.drawCompiler
@@ -17,7 +17,14 @@ root.title("Draw compiler")
 ## Inicializa text boxes para el codigo, consola y resultado
 text_code = Text(root, height=25, width=40)
 text_console = Text(root, height=10, width=125)
-text_result = Text(root, height=25, width=80)
+canvas = Canvas(root, height=400, width=400)
+
+class RedirectText(object):
+    def __init__(self, text_ctrl):
+        self.output = text_ctrl
+    
+    def write(self, string):
+        self.output.insert(END, string)
 
 ## Funcion para compilar el codigo
 def compile():
@@ -26,17 +33,25 @@ def compile():
     code = text_code.get("1.0", END)
     try:
       parser.parse(code)
+      text_console.insert(END, "Successfully compiled!\n")
     except SystemExit as e:
       text_console.insert(END, str(e.message))
 
 def run():
+    redir = RedirectText(text_console)
+    sys.stdout = redir
     compile()
-    for key, value in drawCompiler.dir_func.items() :
-        print(str(key) + " : " + str(value))
     virtual = VirtualMachine(drawCompiler.quad, drawCompiler.memory_manager)
-    print(virtual.memory.mem_local.var_int)
-    print(virtual.memory.mem_local.var_float)
-    print(virtual.memory.mem_local.var_boolean)
+    print("Cuadruplos")
+    i = 0
+    for quad in drawCompiler.quad :
+        print(str(i) + " " + str(quad))
+        i += 1
+    #for key, value in drawCompiler.dir_func.items() :
+    #    print(str(key) + " : " + str(value))
+    #print(virtual.memory.mem_local.var_int)
+    #print(virtual.memory.mem_local.var_float)
+    #print(virtual.memory.mem_local.var_boolean)
 
 ## Menu
 menubar = Menu(root)
@@ -86,7 +101,26 @@ label_console.grid(row=3, column=0)
 
 ## Configura el grid de cada text box
 text_code.grid(row=2, column=0)
-text_result.grid(row=2, column=1)
 text_console.grid(row=4, column=0, columnspan=3)
+canvas.grid(row=2, column=1)
+
+
+## Turtles
+
+silly = turtle.RawTurtle(canvas)
+
+silly.forward(50)
+silly.right(90)     # Rotate clockwise by 90 degrees
+
+silly.forward(50)
+silly.right(90)
+
+silly.forward(50)
+silly.right(90)
+
+silly.forward(50)
+silly.right(90)
+
+turtle.done()
 
 root.mainloop()

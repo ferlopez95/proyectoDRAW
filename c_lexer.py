@@ -35,7 +35,7 @@ reserved = {
     'square' : 'SQUARE',
     'circle' : 'CIRCLE',
     'Draw' : 'NEWDRAW',
-    
+    'print' : 'PRINT'
 }
 
 # lista de tokens

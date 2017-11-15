@@ -6,8 +6,9 @@ class VirtualMachine:
         self.quadruples = quadruples
         self.memory = MemoryManager()
         self.memory.copy(mem)
-        i = 1
-        for quad in quadruples :
+        i = 0
+        while i < len(quadruples) :
+            quad = quadruples[i]
             operator = quad['operator']
             leftOperand = quad['leftOperand']
             rightOperand = quad['rightOperand']
@@ -21,6 +22,9 @@ class VirtualMachine:
             if (operator == '='):
                 value = self.memory.get_var(leftOperand)
                 self.memory.add_var(result, value)
+            elif (operator == 'PRINT'):
+                value = self.memory.get_var(leftOperand)
+                print(value)
             elif (operator == '+'):
                 total = value1 + value2
                 self.memory.add_var(result, total)
@@ -50,7 +54,8 @@ class VirtualMachine:
                 value2 = self.memory.get_var(leftOperand)
                 total = value1 and value2
                 self.memory.add_var(result, total)
-
-            print (str(i) + ": " + str(quad))
-            i = i + 1
+            elif (operator == "GOTO"):
+                i = result
+                continue
+            i+=1
 
