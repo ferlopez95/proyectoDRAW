@@ -463,7 +463,7 @@ def p_rparen_condicion(p):
         sys.exit(message)
     else:
         result = drawCompiler.pop_pilaO()
-        drawCompiler.add_quad("GotoF", result, -1, -1)
+        drawCompiler.add_quad("GOTOF", result, -1, -1)
         drawCompiler.add_pJumps(drawCompiler.get_cont()-1)
 
 
@@ -481,12 +481,12 @@ def p_condicion_else(p):
     drawCompiler.add_quad("GOTO", -1, -1 ,-1)
     falso = drawCompiler.pop_pJumps()
     drawCompiler.add_pJumps(drawCompiler.get_cont()-1)
-    drawCompiler.fill(falso, drawCompiler.get_cont()+1)
+    drawCompiler.fill(falso, drawCompiler.get_cont())
 
 def p_condicion_end(p):
     ''' condicion_end : END '''
     end = drawCompiler.pop_pJumps()
-    drawCompiler.fill(end, drawCompiler.get_cont()+1)
+    drawCompiler.fill(end, drawCompiler.get_cont())
     drawCompiler.pop_inner_scope()
 
 def p_ciclo(p):
@@ -564,13 +564,14 @@ def p_for_exp2(p):
 
 def p_for_rparen(p):
     '''for_rparen : RPAREN'''
+    drawCompiler.add_pJumps(drawCompiler.get_cont())
     drawCompiler.add_pJumps(drawCompiler.get_cont()+1)
     result3 = drawCompiler.pop_pilaO()
     result2 = drawCompiler.pop_pilaO()
     result1 = drawCompiler.pop_pilaO()
     next_var_for = drawCompiler.next_var_for()
     drawCompiler.add_quad('<=',result1,result2,next_var_for)
-    drawCompiler.add_quad('Gotof',next_var_for,-1,-1)
+    drawCompiler.add_quad('GOTOF',next_var_for,-1,-1)
     drawCompiler.add_pilaO(result1)
     drawCompiler.add_pilaO(result2)
     drawCompiler.add_pilaO(result3)
@@ -583,12 +584,13 @@ def p_for_end(p):
     ''' for_end : END '''
     drawCompiler.pop_inner_scope()
     returns = drawCompiler.pop_pJumps()
+    condition = drawCompiler.pop_pJumps()
     result3 = drawCompiler.pop_pilaO()
     result2 = drawCompiler.pop_pilaO()
     result1 = drawCompiler.pop_pilaO()
     drawCompiler.add_quad('+',result1,result3,result1)
-    drawCompiler.add_quad('GOTO',-1,-1,returns)
-    drawCompiler.fill(returns, drawCompiler.get_cont()+1)
+    drawCompiler.add_quad('GOTO',-1,-1,condition)
+    drawCompiler.fill(returns, drawCompiler.get_cont())
     drawCompiler.pop_pType()
     drawCompiler.pop_pType()
     drawCompiler.pop_pType()
@@ -600,7 +602,7 @@ def p_while(p):
 def p_while_init(p):
     ''' while_init : WHILE '''
     drawCompiler.add_inner_scope()
-    drawCompiler.add_pJumps(drawCompiler.get_cont()+1)
+    drawCompiler.add_pJumps(drawCompiler.get_cont())
 
 def p_rparen_while(p):
     '''rparen_while : RPAREN'''
@@ -611,7 +613,7 @@ def p_rparen_while(p):
         sys.exit(message)
     else:
         result = drawCompiler.pop_pilaO()
-        drawCompiler.add_quad("GotoF", result, -1, -1)
+        drawCompiler.add_quad("GOTOF", result, -1, -1)
         drawCompiler.add_pJumps(drawCompiler.get_cont()-1)
 
 def p_while_end(p):
@@ -619,7 +621,7 @@ def p_while_end(p):
     end = drawCompiler.pop_pJumps()
     returns = drawCompiler.pop_pJumps()
     drawCompiler.add_quad("GOTO",-1,-1,returns)
-    drawCompiler.fill(end, drawCompiler.get_cont()+1)
+    drawCompiler.fill(end, drawCompiler.get_cont())
     drawCompiler.pop_inner_scope()
 
 def p_funcion(p):

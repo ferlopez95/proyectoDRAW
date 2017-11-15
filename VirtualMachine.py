@@ -51,11 +51,30 @@ class VirtualMachine:
                 self.memory.add_var(result, total)
             elif (operator == '&&'):
                 value1 = self.memory.get_var(leftOperand)
-                value2 = self.memory.get_var(leftOperand)
+                value2 = self.memory.get_var(rightOperand)
                 total = value1 and value2
+                self.memory.add_var(result, total)
+            elif (operator == '||'):
+                value1 = self.memory.get_var(leftOperand)
+                value2 = self.memory.get_var(rightOperand)
+                total = value1 or value2
+                self.memory.add_var(result, total)
+            elif (operator == '=='):
+                value1 = self.memory.get_var(leftOperand)
+                value2 = self.memory.get_var(rightOperand)
+                total = value1 == value2
+                self.memory.add_var(result, total)
+            elif (operator == '%'):
+                value1 = self.memory.get_var(leftOperand)
+                value2 = self.memory.get_var(rightOperand)
+                total = value1 % value2
                 self.memory.add_var(result, total)
             elif (operator == "GOTO"):
                 i = result
                 continue
+            elif (operator == "GOTOF"):
+                value = self.memory.get_var(leftOperand)
+                if (value == False):
+                    i = result
+                    continue
             i+=1
-
