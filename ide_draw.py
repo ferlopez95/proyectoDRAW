@@ -4,7 +4,9 @@ import c_parser
 import os
 import turtle
 from VirtualMachine import VirtualMachine
-from Tkinter import *
+#import _tkinter
+#import tkinter
+from tkinter import *
 
 parser = c_parser.parser
 drawCompiler = c_parser.drawCompiler
@@ -40,6 +42,10 @@ def compile():
       text_console.insert(END, "Successfully compiled!\n")
     except SystemExit as e:
       text_console.insert(END, str(e.message))
+    i = 0
+    for quad in drawCompiler.quad :
+        print(str(i) + " " + str(quad))
+        i += 1
 
 def run():
     compile()
@@ -49,11 +55,12 @@ def run():
     for quad in drawCompiler.quad :
         print(str(i) + " " + str(quad))
         i += 1
-    #for key, value in drawCompiler.dir_func.items() :
-    #    print(str(key) + " : " + str(value))
-    #print(virtual.memory.mem_local.var_int)
-    #print(virtual.memory.mem_local.var_float)
-    #print(virtual.memory.mem_local.var_boolean)
+    for key, value in drawCompiler.dir_func.items() :
+        print(str(key) + " : " + str(value))
+    print (drawCompiler.pilaO)
+    print(virtual.memory.mem_local.var_int)
+    print(virtual.memory.mem_local.var_float)
+    print(virtual.memory.mem_local.var_boolean)
 
 ## Menu
 menubar = Menu(root)

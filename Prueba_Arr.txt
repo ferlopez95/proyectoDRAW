@@ -1,0 +1,5 @@
+main()
+array <int,3,4> a = [1,2,3,4];
+int b;
+int c = a[0,0];
+end

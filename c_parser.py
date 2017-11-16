@@ -1,8 +1,8 @@
 # encoding=utf8  
 import sys  
 
-reload(sys)  
-sys.setdefaultencoding('utf8')
+#reload(sys)  
+#sys.setdefaultencoding('utf8')
 
 import c_lexer
 import ply.yacc as yacc
@@ -160,22 +160,48 @@ def p_vars_id(p):
         drawCompiler.add_pType(p[1])
 
 def p_vars_aux(p):
-    ''' vars_aux : array ID vars3 '''
-    if drawCompiler.exists_in_scope(p[2]):
-        message = "Error: La variable " + p[2] + " ya está definida (Línea " + str(p.lexer.lineno) + ")"
+    ''' vars_aux : array vars3 '''
+    if(p[2] == 1):
+        dir_virtual_arr = drawCompiler.get_dir_virtual(p[1])
+        dim_array = drawCompiler.get_dim_array(p[1])
+        cont = 0
+        while(drawCompiler.top_pilaO() != None and cont < dim_array):
+            obj = drawCompiler.get_pilaO()
+            drawCompiler.add_quad("=",obj,-1,dir_virtual_arr)
+            dir_virtual_arr = dir_virtual_arr + 1
+            cont = cont + 1
+
+def p_array(p):
+    ''' array : ARRAY LESS data_type COMMA CTE_I array_2 GREATER ID'''
+    if drawCompiler.exists_in_scope(p[8]):
+        message = "Error: La variable " + p[8] + " ya está definida (Línea " + str(p.lexer.lineno) + ")"
         print(message)
         sys.exit()
     else:
-        drawCompiler.add_var('array', p[2])
-
-def p_array(p):
-    ''' array : ARRAY LESS data_type COMMA CTE_I array_2 GREATER '''
-    pass
+        if(p[5] >= 1):
+            if(p[6] == "vacio"):
+                dir_virtual = drawCompiler.next_var(p[3])
+                drawCompiler.add_array(p[3], p[8], dir_virtual, p[5], -1)
+            elif(p[6] >= 1):
+                dir_virtual = drawCompiler.next_var(p[3])
+                drawCompiler.add_array(p[3], p[8], dir_virtual, p[5], p[6])
+            else:
+                message = "Error: La variable " + p[8] + " la dimensión de un arreglo no puede ser negativa (Línea " + str(p.lexer.lineno) + ")"
+                print(message)
+                sys.exit()
+            p[0] = p[8]
+        else:
+            message = "Error: La variable " + p[8] + " la dimensión de un arreglo no puede ser negativa (Línea " + str(p.lexer.lineno) + ")"
+            print(message)
+            sys.exit()
 
 def p_array_2(p) :
     ''' array_2 : COMMA CTE_I
     | empty '''
-    pass
+    if(len(p) == 3):
+        p[0] = p[2]
+    else:
+        p[0] = "vacio"
 
 def p_vars_2(p):
     '''vars2 : asignacion_equal super_exp SEMICOLON
@@ -201,7 +227,10 @@ def p_vars_2(p):
 def p_vars_3(p):
     '''vars3 : EQUAL def_array SEMICOLON
     | SEMICOLON'''
-    pass
+    if(len(p) == 4):
+        p[0] = 1
+    else:
+        p[0] = 0
 
 def p_llamada(p):
     '''llamada : llamada_id llamada_2'''
@@ -271,7 +300,7 @@ def p_def_array_2(p):
     pass
 
 def p_def_array_cte(p):
-    '''def_array_cte : var_cte def_array_cte_2'''
+    '''def_array_cte : super_exp def_array_cte_2'''
     pass
 
 def p_def_array_cte_2(p):
@@ -406,18 +435,52 @@ def p_var_cte_1(p):
         sys.exit()
     else:
         dir_virtual = drawCompiler.get_dir_virtual(p[1])
-        drawCompiler.add_pilaO(dir_virtual)
-        drawCompiler.add_pType(drawCompiler.get_type(p[1]))
+        if(p[2] == 1):
+            obj = drawCompiler.pop_pilaO()
+            dim1 = drawCompiler.next_var_cte('int',drawCompiler.get_dim1_array(p[1]))
+            cero = drawCompiler.next_var_cte('int',0)
+            drawCompiler.add_quad("VERIFICA",obj,cero,dim1)
+            next_temp = drawCompiler.next_temp('int')
+            dir_virtual_cte = drawCompiler.next_var_cte('int',dir_virtual)
+            drawCompiler.add_quad('+',obj,dir_virtual_cte, next_temp)
+            drawCompiler.add_pilaO("("+str(next_temp)+")")
+            drawCompiler.add_pType(drawCompiler.get_type(p[1]))
+        elif(p[2] == 2):
+            obj2 = drawCompiler.pop_pilaO()
+            obj = drawCompiler.pop_pilaO()
+            dim1 = drawCompiler.next_var_cte('int',drawCompiler.get_dim1_array(p[1]))
+            dim2 = drawCompiler.next_var_cte('int',drawCompiler.get_dim2_array(p[1]))
+            cero = drawCompiler.next_var_cte('int',0)
+            next_temp = drawCompiler.next_temp('int')
+            drawCompiler.add_quad("VERIFICA",obj,cero,dim1)
+            drawCompiler.add_quad('*',obj,dim2, next_temp)
+            drawCompiler.add_quad("VERIFICA",obj2,cero,dim2)
+            next_temp2 = drawCompiler.next_temp('int')
+            drawCompiler.add_quad('+',obj2,next_temp, next_temp2)
+            next_temp3 = drawCompiler.next_temp('int')
+            dir_virtual_cte = drawCompiler.next_var_cte('int',dir_virtual)
+            drawCompiler.add_quad('+',next_temp2,dir_virtual_cte,next_temp3)     
+            drawCompiler.add_pilaO("("+str(next_temp3)+")")
+            drawCompiler.add_pType(drawCompiler.get_type(p[1]))
+        else:
+            drawCompiler.add_pilaO(dir_virtual)
+            drawCompiler.add_pType(drawCompiler.get_type(p[1]))
 
 def p_var_cte_2(p):
-    ''' var_cte_2 : LBRACKET exp var_cte_3
+    ''' var_cte_2 : LBRACKET super_exp var_cte_3
     | empty '''
-    pass
+    if(len(p) == 4):
+        p[0] = 1 + p[3]
+    else:
+        p[0] = 0
 
 def p_var_cte_3(p):
     '''var_cte_3 : RBRACKET
-    | COMMA exp RBRACKET'''
-    pass
+    | COMMA super_exp RBRACKET'''
+    if(len(p) == 4):
+        p[0] = 1
+    else:
+        p[0] = 0
 
 def p_factor(p):
     '''factor : lparen_factor super_exp rparen_factor

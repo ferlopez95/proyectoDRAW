@@ -69,3 +69,10 @@ class Memory:
         elif (self.between(dir_virtual, self.boolean, self.boolean_limit)):
             return 'boolean'
 
+    def array_dim(self,type,dir_virtual,dim):
+        if(type == 'int'):
+            self.int = self.int + dim - 1
+        elif(type == 'float'):
+            self.float = self.float + dim - 1
+        elif(type == 'boolean'):
+            self.boolean = self.boolean + dim - 1

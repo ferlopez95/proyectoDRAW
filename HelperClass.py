@@ -163,6 +163,16 @@ class HelperClass(object):
         else:
             return -1
 
+    def top_pilaO(self):
+        if (len(self.pilaO) > 0):
+            return self.pilaO[len(self.pilaO)-1]
+        else:
+            return None
+
+    def get_pilaO(self):
+        if (len(self.pilaO) > 0):
+            return self.pilaO.pop(0)
+
     def get_type(self, id):
         if (id in self.vars_table()) :
             return self.vars_table()[id]['type']
@@ -286,3 +296,43 @@ class HelperClass(object):
 
     def get_dir_virtual(self, id):
         return self.dir_func[self.actual_scope]['vars'][id]['dir_virtual']
+
+    def get_dim_array(self,id):
+        return self.dir_func[self.actual_scope]['vars'][id]['dim_total']
+
+    def get_dim1_array(self,id):
+        return self.dir_func[self.actual_scope]['vars'][id]['dim1']
+
+    def get_dim2_array(self,id):
+        return self.dir_func[self.actual_scope]['vars'][id]['dim2']
+    
+    def add_array(self, type, id, dir_virtual, dim1, dim2):
+        if (len(self.inner_scopes()) >= 1):
+            inner = self.inner_scopes().pop()
+            if(dim2 != -1):
+                inner[id] = {'type' : type, 'dir_virtual' : dir_virtual, 'array' : True, 'dim1': dim1, 'dim2' : dim2, 'dim_total' : dim1*dim2}
+                if(self.actual_scope == "global"):
+                    self.memory_manager.mem_global.array_dim(type,dir_virtual,dim1*dim2)
+                else:
+                    self.memory_manager.mem_local.array_dim(type,dir_virtual,dim1*dim2)
+            else:
+                inner[id] = {'type' : type, 'dir_virtual' : dir_virtual, 'array' : True, 'dim1': dim1, 'dim_total' : dim1}
+                if(self.actual_scope == "global"):
+                    self.memory_manager.mem_global.array_dim(type,dir_virtual,dim1)
+                else:
+                    self.memory_manager.mem_local.array_dim(type,dir_virtual,dim1)
+            self.inner_scopes().append(inner)
+        else:
+            if(dim2 != -1):
+                self.vars_table()[id] = {'type' : type, 'dir_virtual' : dir_virtual, 'array' : True, 'dim1': dim1, 'dim2' : dim2, 'dim_total' : dim1*dim2}
+                if(self.actual_scope == "global"):
+                    self.memory_manager.mem_global.array_dim(type,dir_virtual,dim1*dim2)
+                else:
+                    self.memory_manager.mem_local.array_dim(type,dir_virtual,dim1*dim2)
+            else:
+                self.vars_table()[id] = {'type' : type, 'dir_virtual' : dir_virtual, 'array' : True, 'dim1': dim1, 'dim_total' : dim1}
+                if(self.actual_scope == "global"):
+                    self.memory_manager.mem_global.array_dim(type,dir_virtual,dim1)
+                else:
+                    self.memory_manager.mem_local.array_dim(type,dir_virtual,dim1)
+        self.add_total_var()
