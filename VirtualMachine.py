@@ -15,10 +15,6 @@ class VirtualMachine:
             rightOperand = quad['rightOperand']
             result = quad['result']
 
-            if (operator == 'param'):
-                i = i + 1
-                continue
-
             if("(" in str(leftOperand)):
                 new_dir = int(leftOperand[1:-1])
                 leftOperand = self.memory.get_var(new_dir)
@@ -111,6 +107,7 @@ class VirtualMachine:
                     break
             elif (operator == "ERA"):
                 self.memory.add_context()
+                self.memory.read_last_memory(True)
             elif (operator == "ENDPROC"):
                 self.memory.erase_context()
                 i = self.stack.pop()
@@ -118,5 +115,6 @@ class VirtualMachine:
             elif (operator == "GOSUB"):
                 self.stack.append(i + 1)
                 i = self.memory.get_var(leftOperand)
+                self.memory.read_last_memory(False)
                 continue
             i+=1

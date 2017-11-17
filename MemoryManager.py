@@ -10,7 +10,7 @@ class MemoryManager:
         self.mem_const = Constants()
         self.mem_local_stack = [Locals()]
         self.mem_temp_stack = [Temps()]
-        
+        self.read_last = False
 
     def add_var(self, dir_virtual, val):
         self.get_type(dir_virtual).add_var(dir_virtual, val)
@@ -20,10 +20,19 @@ class MemoryManager:
 
     # Funcion para checar el tope de la pila
     def mem_local(self):
-        return self.mem_local_stack[len(self.mem_local_stack) - 1]
-
+        if (self.read_last == True):
+            return self.mem_local_stack[len(self.mem_local_stack) - 2]
+        else:
+            return self.mem_local_stack[len(self.mem_local_stack) - 1]
+        
     def mem_temp(self):
-        return self.mem_temp_stack[len(self.mem_temp_stack) - 1]
+        if (self.read_last == True):
+            return self.mem_temp_stack[len(self.mem_temp_stack) - 2]
+        else:
+            return self.mem_temp_stack[len(self.mem_temp_stack) - 1]
+
+    def read_last_memory(self, value):
+        self.read_last = value
 
     # Funcion para saber si la direccion virtual esta entre otras dos direcciones
     def between(self, dir_virtual, dir_inicial, dir_final):
