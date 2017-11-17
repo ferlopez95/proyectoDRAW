@@ -10,7 +10,7 @@ reserved = {
     'int' : 'INT',
     'float' : 'FLOAT',
     'boolean' : 'BOOLEAN',
-    'draw' : 'DRAW',
+    'Draw' : 'DRAW',
     'array' : 'ARRAY',
     'main' : 'MAIN',
     'global' : 'GLOBAL',
@@ -20,8 +20,8 @@ reserved = {
     'while' : 'WHILE',
     'for' : 'FOR',
     'return' : 'RETURN',
-    'true' : 'TRUE',
-    'false' : 'FALSE',
+    'True' : 'TRUE',
+    'False' : 'FALSE',
     'setPosition' : 'SETPOSITION',
     'setColor' : 'SETCOLOR',
     'speed' : 'SPEED',
@@ -34,7 +34,6 @@ reserved = {
     'clear' : 'CLEAR',
     'square' : 'SQUARE',
     'circle' : 'CIRCLE',
-    'Draw' : 'NEWDRAW',
     'print' : 'PRINT'
 }
 

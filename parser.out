@@ -40,7 +40,7 @@ Rule 34    asignacion_array -> empty
 Rule 35    asignacion_equal -> EQUAL
 Rule 36    asignacion_3 -> RBRACKET
 Rule 37    asignacion_3 -> COMMA super_exp RBRACKET
-Rule 38    vars -> DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON
+Rule 38    vars -> DRAW ID EQUAL DRAW LPAREN RPAREN SEMICOLON
 Rule 39    vars -> vars_id vars2
 Rule 40    vars -> vars_aux
 Rule 41    vars_id -> data_type ID
@@ -179,7 +179,7 @@ DEF                  : 140
 DEQUAL               : 75
 DISTINT              : 76
 DIVIDE               : 156
-DRAW                 : 38
+DRAW                 : 38 38
 ELSE                 : 107
 END                  : 20 108 135 139 145 146
 EQUAL                : 35 38 48
@@ -201,7 +201,6 @@ LESSEQUAL            : 74
 LPAREN               : 21 29 38 51 100 102 112 130 136 147
 MAIN                 : 21
 MINUS                : 154
-NEWDRAW              : 38
 OR                   : 159
 PERCENT              : 157
 PLUS                 : 153
@@ -408,7 +407,7 @@ state 5
 state 6
 
     (8) globales -> global_1 . vars globales_2
-    (38) vars -> . DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON
+    (38) vars -> . DRAW ID EQUAL DRAW LPAREN RPAREN SEMICOLON
     (39) vars -> . vars_id vars2
     (40) vars -> . vars_aux
     (41) vars_id -> . data_type ID
@@ -538,7 +537,7 @@ state 15
 
 state 16
 
-    (38) vars -> DRAW . ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON
+    (38) vars -> DRAW . ID EQUAL DRAW LPAREN RPAREN SEMICOLON
 
     ID              shift and go to state 41
 
@@ -652,7 +651,7 @@ state 26
     (109) ciclo -> . for
     (110) ciclo -> . while
     (111) accion -> . ID POINT accion_nombre accion_params SEMICOLON
-    (38) vars -> . DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON
+    (38) vars -> . DRAW ID EQUAL DRAW LPAREN RPAREN SEMICOLON
     (39) vars -> . vars_id vars2
     (40) vars -> . vars_aux
     (50) llamada -> . llamada_id llamada_2
@@ -790,7 +789,7 @@ state 37
 state 38
 
     (9) globales_2 -> global_1 . vars globales_2
-    (38) vars -> . DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON
+    (38) vars -> . DRAW ID EQUAL DRAW LPAREN RPAREN SEMICOLON
     (39) vars -> . vars_id vars2
     (40) vars -> . vars_aux
     (41) vars_id -> . data_type ID
@@ -830,7 +829,7 @@ state 40
 
 state 41
 
-    (38) vars -> DRAW ID . EQUAL NEWDRAW LPAREN RPAREN SEMICOLON
+    (38) vars -> DRAW ID . EQUAL DRAW LPAREN RPAREN SEMICOLON
 
     EQUAL           shift and go to state 80
 
@@ -1042,7 +1041,7 @@ state 52
     (109) ciclo -> . for
     (110) ciclo -> . while
     (111) accion -> . ID POINT accion_nombre accion_params SEMICOLON
-    (38) vars -> . DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON
+    (38) vars -> . DRAW ID EQUAL DRAW LPAREN RPAREN SEMICOLON
     (39) vars -> . vars_id vars2
     (40) vars -> . vars_aux
     (50) llamada -> . llamada_id llamada_2
@@ -1427,7 +1426,7 @@ state 74
     (109) ciclo -> . for
     (110) ciclo -> . while
     (111) accion -> . ID POINT accion_nombre accion_params SEMICOLON
-    (38) vars -> . DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON
+    (38) vars -> . DRAW ID EQUAL DRAW LPAREN RPAREN SEMICOLON
     (39) vars -> . vars_id vars2
     (40) vars -> . vars_aux
     (50) llamada -> . llamada_id llamada_2
@@ -1519,7 +1518,7 @@ state 76
     (109) ciclo -> . for
     (110) ciclo -> . while
     (111) accion -> . ID POINT accion_nombre accion_params SEMICOLON
-    (38) vars -> . DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON
+    (38) vars -> . DRAW ID EQUAL DRAW LPAREN RPAREN SEMICOLON
     (39) vars -> . vars_id vars2
     (40) vars -> . vars_aux
     (50) llamada -> . llamada_id llamada_2
@@ -1604,9 +1603,9 @@ state 79
 
 state 80
 
-    (38) vars -> DRAW ID EQUAL . NEWDRAW LPAREN RPAREN SEMICOLON
+    (38) vars -> DRAW ID EQUAL . DRAW LPAREN RPAREN SEMICOLON
 
-    NEWDRAW         shift and go to state 133
+    DRAW            shift and go to state 133
 
 
 state 81
@@ -2757,7 +2756,7 @@ state 132
 
 state 133
 
-    (38) vars -> DRAW ID EQUAL NEWDRAW . LPAREN RPAREN SEMICOLON
+    (38) vars -> DRAW ID EQUAL DRAW . LPAREN RPAREN SEMICOLON
 
     LPAREN          shift and go to state 203
 
@@ -3832,7 +3831,7 @@ state 202
 
 state 203
 
-    (38) vars -> DRAW ID EQUAL NEWDRAW LPAREN . RPAREN SEMICOLON
+    (38) vars -> DRAW ID EQUAL DRAW LPAREN . RPAREN SEMICOLON
 
     RPAREN          shift and go to state 230
 
@@ -4058,7 +4057,7 @@ state 216
     (109) ciclo -> . for
     (110) ciclo -> . while
     (111) accion -> . ID POINT accion_nombre accion_params SEMICOLON
-    (38) vars -> . DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON
+    (38) vars -> . DRAW ID EQUAL DRAW LPAREN RPAREN SEMICOLON
     (39) vars -> . vars_id vars2
     (40) vars -> . vars_aux
     (50) llamada -> . llamada_id llamada_2
@@ -4317,7 +4316,7 @@ state 226
     (109) ciclo -> . for
     (110) ciclo -> . while
     (111) accion -> . ID POINT accion_nombre accion_params SEMICOLON
-    (38) vars -> . DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON
+    (38) vars -> . DRAW ID EQUAL DRAW LPAREN RPAREN SEMICOLON
     (39) vars -> . vars_id vars2
     (40) vars -> . vars_aux
     (50) llamada -> . llamada_id llamada_2
@@ -4403,7 +4402,7 @@ state 229
 
 state 230
 
-    (38) vars -> DRAW ID EQUAL NEWDRAW LPAREN RPAREN . SEMICOLON
+    (38) vars -> DRAW ID EQUAL DRAW LPAREN RPAREN . SEMICOLON
 
     SEMICOLON       shift and go to state 249
 
@@ -4651,24 +4650,24 @@ state 248
 
 state 249
 
-    (38) vars -> DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON .
+    (38) vars -> DRAW ID EQUAL DRAW LPAREN RPAREN SEMICOLON .
 
-    GLOBAL          reduce using rule 38 (vars -> DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON .)
-    DEF             reduce using rule 38 (vars -> DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON .)
-    MAIN            reduce using rule 38 (vars -> DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON .)
-    ID              reduce using rule 38 (vars -> DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON .)
-    DRAW            reduce using rule 38 (vars -> DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON .)
-    PRINT           reduce using rule 38 (vars -> DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON .)
-    IF              reduce using rule 38 (vars -> DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON .)
-    FOR             reduce using rule 38 (vars -> DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON .)
-    WHILE           reduce using rule 38 (vars -> DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON .)
-    INT             reduce using rule 38 (vars -> DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON .)
-    FLOAT           reduce using rule 38 (vars -> DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON .)
-    BOOLEAN         reduce using rule 38 (vars -> DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON .)
-    ARRAY           reduce using rule 38 (vars -> DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON .)
-    END             reduce using rule 38 (vars -> DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON .)
-    RETURN          reduce using rule 38 (vars -> DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON .)
-    ELSE            reduce using rule 38 (vars -> DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON .)
+    GLOBAL          reduce using rule 38 (vars -> DRAW ID EQUAL DRAW LPAREN RPAREN SEMICOLON .)
+    DEF             reduce using rule 38 (vars -> DRAW ID EQUAL DRAW LPAREN RPAREN SEMICOLON .)
+    MAIN            reduce using rule 38 (vars -> DRAW ID EQUAL DRAW LPAREN RPAREN SEMICOLON .)
+    ID              reduce using rule 38 (vars -> DRAW ID EQUAL DRAW LPAREN RPAREN SEMICOLON .)
+    DRAW            reduce using rule 38 (vars -> DRAW ID EQUAL DRAW LPAREN RPAREN SEMICOLON .)
+    PRINT           reduce using rule 38 (vars -> DRAW ID EQUAL DRAW LPAREN RPAREN SEMICOLON .)
+    IF              reduce using rule 38 (vars -> DRAW ID EQUAL DRAW LPAREN RPAREN SEMICOLON .)
+    FOR             reduce using rule 38 (vars -> DRAW ID EQUAL DRAW LPAREN RPAREN SEMICOLON .)
+    WHILE           reduce using rule 38 (vars -> DRAW ID EQUAL DRAW LPAREN RPAREN SEMICOLON .)
+    INT             reduce using rule 38 (vars -> DRAW ID EQUAL DRAW LPAREN RPAREN SEMICOLON .)
+    FLOAT           reduce using rule 38 (vars -> DRAW ID EQUAL DRAW LPAREN RPAREN SEMICOLON .)
+    BOOLEAN         reduce using rule 38 (vars -> DRAW ID EQUAL DRAW LPAREN RPAREN SEMICOLON .)
+    ARRAY           reduce using rule 38 (vars -> DRAW ID EQUAL DRAW LPAREN RPAREN SEMICOLON .)
+    END             reduce using rule 38 (vars -> DRAW ID EQUAL DRAW LPAREN RPAREN SEMICOLON .)
+    RETURN          reduce using rule 38 (vars -> DRAW ID EQUAL DRAW LPAREN RPAREN SEMICOLON .)
+    ELSE            reduce using rule 38 (vars -> DRAW ID EQUAL DRAW LPAREN RPAREN SEMICOLON .)
 
 
 state 250
@@ -4748,7 +4747,7 @@ state 255
     (109) ciclo -> . for
     (110) ciclo -> . while
     (111) accion -> . ID POINT accion_nombre accion_params SEMICOLON
-    (38) vars -> . DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON
+    (38) vars -> . DRAW ID EQUAL DRAW LPAREN RPAREN SEMICOLON
     (39) vars -> . vars_id vars2
     (40) vars -> . vars_aux
     (50) llamada -> . llamada_id llamada_2
@@ -5091,7 +5090,7 @@ state 274
     (109) ciclo -> . for
     (110) ciclo -> . while
     (111) accion -> . ID POINT accion_nombre accion_params SEMICOLON
-    (38) vars -> . DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON
+    (38) vars -> . DRAW ID EQUAL DRAW LPAREN RPAREN SEMICOLON
     (39) vars -> . vars_id vars2
     (40) vars -> . vars_aux
     (50) llamada -> . llamada_id llamada_2

@@ -106,7 +106,7 @@ class Constants(Memory):
         return Memory.next_float(self)
 
     def next_boolean(self, cte):
-        if(cte == 'true'):
+        if(cte == 'True'):
             return 36000
         else:
             return 36001

@@ -174,7 +174,7 @@ def p_asignacion_3(p):
         p[0] = 0
 
 def p_vars(p):
-    '''vars : DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON
+    '''vars : DRAW ID EQUAL DRAW LPAREN RPAREN SEMICOLON
     | vars_id vars2
     | vars_aux'''
     if len(p) >= 4:

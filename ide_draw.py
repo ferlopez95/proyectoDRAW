@@ -35,8 +35,10 @@ sys.stdout = redir
 ## Funcion para compilar el codigo
 def compile():
     drawCompiler.reset()
-    text_console.delete(1.0, END)   
+    text_console.delete(1.0, END)
     code = text_code.get("1.0", END)
+    blank = "\n"
+    code = blank.join(code.splitlines())
     try:
       parser.parse(code)
       text_console.insert(END, "Successfully compiled!\n")
