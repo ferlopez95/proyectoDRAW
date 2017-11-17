@@ -43,7 +43,7 @@ class Memory:
     def add_var(self, dir_virtual, val):
         type = self.get_type(dir_virtual)
         if (type == 'int'):
-            self.add_int(dir_virtual, int(val))
+            self.add_int(dir_virtual, int(float(val)))
         elif (type == 'float'):
             self.add_float(dir_virtual, float(val))
         elif (type == 'boolean'):

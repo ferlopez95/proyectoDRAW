@@ -17,26 +17,7 @@ class HelperClass(object):
         self.params = []
         self.sem_cube = SemanticCube().cube
         self.memory_manager = MemoryManager()
-        self.vgi = 4000
-        self.vgf = 6000
-        self.vgb = 8000
-        self.vli = 10000
-        self.vlf = 12000
-        self.vlb = 14000
-        self.tgi = 16000
-        self.tgf = 20000
-        self.tgb = 24000
-        self.ctei= 28000
-        self.ctef= 32000
-        self.cteb= 36000
         
-        
-
-        self.memoria = {'Vgi':{},'Vgf':{},'Vgb':{},
-                        'Vli':{},'Vlf':{},'Vlb':{},
-                        'Tgi':{},'Tgf':{},'Tgb':{},
-                        'Ctei':{},'Ctef':{},'Cteb':{36000:'true',36001:'false'}}
-
     def reset(self):
         self.actual_scope = 'global'
         self.dir_func = {}
@@ -51,27 +32,8 @@ class HelperClass(object):
         self.params = []
         self.sem_cube = SemanticCube().cube
         self.memory_manager = MemoryManager()
-        self.vgi = 4000
-        self.vgf = 6000
-        self.vgb = 8000
-        self.vli = 10000
-        self.vlf = 12000
-        self.vlb = 14000
-        self.tgi = 16000
-        self.tgf = 20000
-        self.tgb = 24000
-        self.ctei= 28000
-        self.ctef= 32000
-        self.cteb= 36000
         self.add_func('void', 'global')
         
-
-        self.memoria = {'Vgi':{},'Vgf':{},'Vgb':{},
-                        'Vli':{},'Vlf':{},'Vlb':{},
-                        'Tgi':{},'Tgf':{},'Tgb':{},
-                        'Ctei':{},'Ctef':{},'Cteb':{36000:'true',36001:'false'}}
-
-
     def exists_in_scope(self, id):
         if (len(self.inner_scopes()) >= 1):
             if (id in self.vars_table()) :
@@ -193,11 +155,11 @@ class HelperClass(object):
 
     def next_temp(self,var_type):
         if var_type == 'int':
-            return self.memory_manager.mem_temp.next_int()
+            return self.memory_manager.mem_temp().next_int()
         elif var_type == 'float':
-            return self.memory_manager.mem_temp.next_float()
+            return self.memory_manager.mem_temp().next_float()
         elif var_type == 'boolean':
-            return self.memory_manager.mem_temp.next_boolean()
+            return self.memory_manager.mem_temp().next_boolean()
             
     def next_var(self,var_type):
         if(self.actual_scope == "global"):
@@ -209,60 +171,42 @@ class HelperClass(object):
                 return self.memory_manager.mem_global.next_boolean();
         else:
             if var_type == 'int':
-                return self.memory_manager.mem_local.next_int();
+                return self.memory_manager.mem_local().next_int();
             elif var_type == 'float':
-                return self.memory_manager.mem_local.next_float();
+                return self.memory_manager.mem_local().next_float();
             elif var_type == 'boolean':
-                return self.memory_manager.mem_local.next_boolean();
+                return self.memory_manager.mem_local().next_boolean();
 
     def next_var_cte(self,cte_type,cte):
         if cte_type == 'int':
-            return self.memory_manager.mem_const.next_int(cte);
+            return self.memory_manager.mem_const.next_int(cte)
         elif cte_type == 'float':
-            return self.memory_manager.mem_const.next_float(cte);
+            return self.memory_manager.mem_const.next_float(cte)
         elif cte_type == 'boolean':
-            return self.memory_manager.mem_const.next_boolean(cte);
+            return self.memory_manager.mem_const.next_boolean(cte)
 
     def next_var_for(self):
-        return self.memory_manager.mem_temp.next_float()
+        return self.memory_manager.mem_temp().next_float()
 
     def next_func(self,var_type,cte):
         if var_type == 'int':
-            for dir_virtual, cte_val in self.memoria['Vgi'].items():
-                if cte_val == cte:
-                    return dir_virtual
-            var_avail = self.vgi
-            self.vgi = self.vgi + 1
-            self.memoria['Vgi'][var_avail] = cte
-            return var_avail
+            return self.memory_manager.mem_global.next_int(cte)
         elif var_type == 'float':
-            for dir_virtual, cte_val in self.memoria['Vgf'].items():
-                if cte_val == cte:
-                    return dir_virtual
-            var_avail = self.vgf
-            self.vgf = self.vgf + 1
-            self.memoria['Vgf'][var_avail] = cte
-            return var_avail
+            return self.memory_manager.mem_global.next_float(cte)
         elif var_type == 'boolean':
-            for dir_virtual, cte_val in self.memoria['Vgb'].items():
-                if cte_val == cte:
-                    return dir_virtual
-            var_avail = self.vgb
-            self.vgb = self.vgb + 1
-            self.memoria['Vgb'][var_avail] = cte
-            return var_avail
+            return self.memory_manager.mem_global.next_boolean(cte)
 
     def find_func(self,func_type,func_id):
         if func_type == 'int':
-            for dir_virtual, cte_val in self.memoria['Vgi'].items():
+            for dir_virtual, cte_val in self.memory_manager.mem_global.var_int.items():
                 if cte_val == func_id:
                     return dir_virtual
         elif func_type == 'float':
-            for dir_virtual, cte_val in self.memoria['Vgf'].items():
+            for dir_virtual, cte_val in self.memory_manager.mem_global.var_float.items():
                 if cte_val == func_id:
                     return dir_virtual
         elif func_type == 'boolean':
-            for dir_virtual, cte_val in self.memoria['Vgb'].items():
+            for dir_virtual, cte_val in self.memory_manager.mem_global.var_boolean.items():
                 if cte_val == func_id:
                     return dir_virtual
 
@@ -286,14 +230,6 @@ class HelperClass(object):
     def fill(self, line, value):
         self.quad[line]['result'] = value
 
-    def erase_temps(self):
-        self.vli = 10000
-        self.vlf = 12000
-        self.vlb = 14000
-        self.tgi = 16000
-        self.tgf = 20000
-        self.tgb = 24000
-
     def get_dir_virtual(self, id):
         return self.dir_func[self.actual_scope]['vars'][id]['dir_virtual']
 
@@ -314,13 +250,13 @@ class HelperClass(object):
                 if(self.actual_scope == "global"):
                     self.memory_manager.mem_global.array_dim(type,dir_virtual,dim1*dim2)
                 else:
-                    self.memory_manager.mem_local.array_dim(type,dir_virtual,dim1*dim2)
+                    self.memory_manager.mem_local().array_dim(type,dir_virtual,dim1*dim2)
             else:
                 inner[id] = {'type' : type, 'dir_virtual' : dir_virtual, 'array' : True, 'dim1': dim1, 'dim_total' : dim1}
                 if(self.actual_scope == "global"):
                     self.memory_manager.mem_global.array_dim(type,dir_virtual,dim1)
                 else:
-                    self.memory_manager.mem_local.array_dim(type,dir_virtual,dim1)
+                    self.memory_manager.mem_local().array_dim(type,dir_virtual,dim1)
             self.inner_scopes().append(inner)
         else:
             if(dim2 != -1):
@@ -328,11 +264,14 @@ class HelperClass(object):
                 if(self.actual_scope == "global"):
                     self.memory_manager.mem_global.array_dim(type,dir_virtual,dim1*dim2)
                 else:
-                    self.memory_manager.mem_local.array_dim(type,dir_virtual,dim1*dim2)
+                    self.memory_manager.mem_local().array_dim(type,dir_virtual,dim1*dim2)
             else:
                 self.vars_table()[id] = {'type' : type, 'dir_virtual' : dir_virtual, 'array' : True, 'dim1': dim1, 'dim_total' : dim1}
                 if(self.actual_scope == "global"):
                     self.memory_manager.mem_global.array_dim(type,dir_virtual,dim1)
                 else:
-                    self.memory_manager.mem_local.array_dim(type,dir_virtual,dim1)
+                    self.memory_manager.mem_local().array_dim(type,dir_virtual,dim1)
         self.add_total_var()
+
+    def reset_memory(self):
+        self.memory_manager.reset_memory()

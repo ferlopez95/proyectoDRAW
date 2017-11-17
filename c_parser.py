@@ -98,19 +98,46 @@ def p_asignacion(p):
     pass
 
 def p_asignacion_id(p):
-    '''asignacion_id : ID'''
-    if not drawCompiler.exists_in_scope(p[1]):
-        message = "Error: La variable " + p[1] + " no está definida (Línea " + str(p.lexer.lineno) + ")"
+    '''asignacion_id : ID asignacion_array'''
+    if not drawCompiler.exists_in_scope(p[1]) : 
+        message = "Error: La variable " + p[1] + " no esta definida (Línea " + str(p.lexer.lineno) + ")"
         print(message)
         sys.exit()
     else:
         dir_virtual = drawCompiler.get_dir_virtual(p[1])
-        drawCompiler.add_pilaO(dir_virtual)
-        drawCompiler.add_pType(drawCompiler.get_type(p[1]))
+        if(p[2] == 1):
+            obj = drawCompiler.pop_pilaO()
+            dim1 = drawCompiler.next_var_cte('int',drawCompiler.get_dim1_array(p[1]))
+            cero = drawCompiler.next_var_cte('int',0)
+            drawCompiler.add_quad("VERIFICA",obj,cero,dim1)
+            next_temp = drawCompiler.next_temp('int')
+            dir_virtual_cte = drawCompiler.next_var_cte('int',dir_virtual)
+            drawCompiler.add_quad('+',obj,dir_virtual_cte, next_temp)
+            drawCompiler.add_pilaO("("+str(next_temp)+")")
+            drawCompiler.add_pType(drawCompiler.get_type(p[1]))
+        elif(p[2] == 2):
+            obj2 = drawCompiler.pop_pilaO()
+            obj = drawCompiler.pop_pilaO()
+            dim1 = drawCompiler.next_var_cte('int',drawCompiler.get_dim1_array(p[1]))
+            dim2 = drawCompiler.next_var_cte('int',drawCompiler.get_dim2_array(p[1]))
+            cero = drawCompiler.next_var_cte('int',0)
+            next_temp = drawCompiler.next_temp('int')
+            drawCompiler.add_quad("VERIFICA",obj,cero,dim1)
+            drawCompiler.add_quad('*',obj,dim2, next_temp)
+            drawCompiler.add_quad("VERIFICA",obj2,cero,dim2)
+            next_temp2 = drawCompiler.next_temp('int')
+            drawCompiler.add_quad('+',obj2,next_temp, next_temp2)
+            next_temp3 = drawCompiler.next_temp('int')
+            dir_virtual_cte = drawCompiler.next_var_cte('int',dir_virtual)
+            drawCompiler.add_quad('+',next_temp2,dir_virtual_cte,next_temp3)     
+            drawCompiler.add_pilaO("("+str(next_temp3)+")")
+            drawCompiler.add_pType(drawCompiler.get_type(p[1]))
+        else:
+            drawCompiler.add_pilaO(dir_virtual)
+            drawCompiler.add_pType(drawCompiler.get_type(p[1]))
 
 def p_asignacion_2(p):
-    '''asignacion_2 : asignacion_equal super_exp
-    | LBRACKET exp asignacion_3 EQUAL super_exp'''
+    '''asignacion_2 : asignacion_equal super_exp'''
     if(len(p) == 3 and drawCompiler.top_pOper() == '='):
         rightOperand = drawCompiler.pop_pilaO()
         right_type = drawCompiler.pop_pType()
@@ -119,12 +146,20 @@ def p_asignacion_2(p):
         operator = drawCompiler.pop_pOper()
         result_type = drawCompiler.semantic_check(left_type,right_type,operator)
         if(result_type != 'error'):
-            drawCompiler.add_quad(operator,rightOperand,"",leftOperand)
+            drawCompiler.add_quad(operator,rightOperand,-1,leftOperand)
         else:
             drawCompiler.erase_dir_func()
             message = "Type Mismatch in line " + str(p.lexer.lineno)
             print(message)
             sys.exit()
+
+def p_asignacion_array(p):
+    '''asignacion_array : LBRACKET super_exp asignacion_3
+    | empty'''
+    if(len(p) == 4):
+        p[0] = 1 + p[3]
+    else:
+        p[0] = 0
 
 def p_asignacion_equal(p):
     '''asignacion_equal : EQUAL'''
@@ -132,8 +167,11 @@ def p_asignacion_equal(p):
     
 def p_asignacion_3(p):
     '''asignacion_3 : RBRACKET
-    | COMMA exp RBRACKET'''
-    pass
+    | COMMA super_exp RBRACKET'''
+    if(len(p) == 4):
+        p[0] = 1
+    else:
+        p[0] = 0
 
 def p_vars(p):
     '''vars : DRAW ID EQUAL NEWDRAW LPAREN RPAREN SEMICOLON
@@ -214,7 +252,7 @@ def p_vars_2(p):
         operator = drawCompiler.pop_pOper()
         result_type = drawCompiler.semantic_check(left_type,right_type,operator)
         if(result_type != 'error'):
-            drawCompiler.add_quad(operator,rightOperand,"",leftOperand)
+            drawCompiler.add_quad(operator,rightOperand,-1,leftOperand)
         else:
             drawCompiler.erase_dir_func()
             message = "Type Mismatch in line " + str(p.lexer.lineno)
@@ -234,7 +272,8 @@ def p_vars_3(p):
 
 def p_llamada(p):
     '''llamada : llamada_id llamada_2'''
-    drawCompiler.add_quad("GOSUB",p[1],-1,-1)
+    counter = drawCompiler.next_var_cte('int',drawCompiler.dir_func[p[1]]['counter'])
+    drawCompiler.add_quad("GOSUB",counter,-1,-1)
     drawCompiler.param_k = 0
     if(drawCompiler.dir_func[p[1]]['type'] != "void"):
         drawCompiler.add_pType(drawCompiler.dir_func[p[1]]['type'])
@@ -249,7 +288,7 @@ def p_llamada_id(p):
         print(message)
         sys.exit()
     else:
-        drawCompiler.add_quad("ERA",p[1],"-1","-1")
+        drawCompiler.add_quad("ERA",-1,-1,-1)
         drawCompiler.param_k = 0
         drawCompiler.params = drawCompiler.dir_func[p[1]]['parameters']
         p[0] = p[1]
@@ -695,6 +734,7 @@ def p_funcion_aux(p):
     ''' funcion_aux : funcion_1 var_local bloque funcion_2
         | funcion_void var_local bloque funcion_end'''
     drawCompiler.add_quad("ENDPROC", -1, -1, -1)
+    drawCompiler.reset_memory()
 
 def p_funcion_void(p):
     '''funcion_void :  VOID ID'''
@@ -725,7 +765,6 @@ def p_funcion_2(p):
         result = drawCompiler.pop_pilaO()
         drawCompiler.add_quad("RETURN",result,-1,-1)
         drawCompiler.actual_scope = 'global'
-        drawCompiler.erase_temps()
     else:
         message = "El valor de retorno de la función " + str(drawCompiler.actual_scope) + " no es correcto, como esperaba " + str(func_type) + " se regreso " + str(result_type)
         print(message)
@@ -734,7 +773,6 @@ def p_funcion_2(p):
 def p_funcion_end(p):
     ''' funcion_end : END '''
     drawCompiler.actual_scope = 'global'
-    drawCompiler.erase_temps()
 
 def p_var_local(p):
     '''var_local : LPAREN var_local_2 RPAREN'''

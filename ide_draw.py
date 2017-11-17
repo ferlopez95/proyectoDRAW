@@ -42,10 +42,7 @@ def compile():
       text_console.insert(END, "Successfully compiled!\n")
     except SystemExit as e:
       text_console.insert(END, str(e.message))
-    i = 0
-    for quad in drawCompiler.quad :
-        print(str(i) + " " + str(quad))
-        i += 1
+
 
 def run():
     compile()
@@ -58,9 +55,11 @@ def run():
     for key, value in drawCompiler.dir_func.items() :
         print(str(key) + " : " + str(value))
     print (drawCompiler.pilaO)
-    print(virtual.memory.mem_local.var_int)
-    print(virtual.memory.mem_local.var_float)
-    print(virtual.memory.mem_local.var_boolean)
+    print(virtual.memory.mem_global.var_int)
+    print(virtual.memory.mem_global.var_float)
+    print(virtual.memory.mem_global.var_boolean)
+    print(virtual.memory.mem_local_stack)
+    print(virtual.stack)
 
 ## Menu
 menubar = Menu(root)
