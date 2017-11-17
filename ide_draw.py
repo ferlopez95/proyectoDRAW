@@ -40,25 +40,26 @@ def compile():
     try:
       parser.parse(code)
       text_console.insert(END, "Successfully compiled!\n")
+      return True
     except SystemExit as e:
-      text_console.insert(END, str(e.message))
+      text_console.insert(END, str(e))
 
 def run():
-    compile()
-    virtual = VirtualMachine(drawCompiler.quad, drawCompiler.memory_manager)
-    print("Cuadruplos")
-    i = 0
-    for quad in drawCompiler.quad :
-        print(str(i) + " " + str(quad))
-        i += 1
-    for key, value in drawCompiler.dir_func.items() :
-        print(str(key) + " : " + str(value))
-    print (drawCompiler.pilaO)
-    print(virtual.memory.mem_global.var_int)
-    print(virtual.memory.mem_global.var_float)
-    print(virtual.memory.mem_global.var_boolean)
-    print(virtual.memory.mem_local_stack)
-    print(virtual.stack)
+    if (compile()):
+        virtual = VirtualMachine(drawCompiler.quad, drawCompiler.memory_manager)
+        print("Cuadruplos")
+        i = 0
+        for quad in drawCompiler.quad :
+            print(str(i) + " " + str(quad))
+            i += 1
+        for key, value in drawCompiler.dir_func.items() :
+            print(str(key) + " : " + str(value))
+        print (drawCompiler.pilaO)
+        print(virtual.memory.mem_global.var_int)
+        print(virtual.memory.mem_global.var_float)
+        print(virtual.memory.mem_global.var_boolean)
+        print(virtual.memory.mem_local_stack)
+        print(virtual.stack)
 
 ## Menu
 menubar = Menu(root)

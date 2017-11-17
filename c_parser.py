@@ -300,11 +300,11 @@ def p_llamada_2(p):
 
 def p_llamada_rparen(p):
     '''llamada_rparen : RPAREN'''
-    if(drawCompiler.param_k != len(drawCompiler.params)-1):
-        message = "Error: Wrong number of parameters, Línea " + str(p.lexer.lineno) + ")"
+    if(drawCompiler.param_k != len(drawCompiler.params)):
+        message = "Error: Wrong number of parameters (Línea " + str(p.lexer.lineno) + ")"
         print(message)
         sys.exit()
-        
+
 def p_llamada_exp(p):
     '''llamada_exp : llamada_super_exp llamada_exp2'''
     pass
@@ -313,21 +313,24 @@ def p_llamada_super_exp(p):
     '''llamada_super_exp : super_exp'''
     argument = drawCompiler.pop_pilaO()
     argumentType = drawCompiler.pop_pType()
-    if(argumentType == drawCompiler.params[drawCompiler.param_k]):
-        drawCompiler.add_quad("param",argument,-1,"param" + str(drawCompiler.param_k))
+
+    if(len(drawCompiler.params)>drawCompiler.param_k):
+        if(argumentType == drawCompiler.params[drawCompiler.param_k]):
+            drawCompiler.add_quad("param",argument,-1,"param" + str(drawCompiler.param_k))
+            drawCompiler.param_k = drawCompiler.param_k + 1;
+        else:
+            message = "Error: Type Mismatch in Parameters (Línea " + str(p.lexer.lineno) + ")"
+            print(message)
+            sys.exit()
     else:
-        message = "Error: Type Mismatch in Parameters, Línea " + str(p.lexer.lineno) + ")"
+        message = "Error: Wrong number of parameters (Línea " + str(p.lexer.lineno) + ")"
         print(message)
         sys.exit()
 
 def p_llamada_exp_2(p):
-    '''llamada_exp2 : llamada_comma llamada_exp
+    '''llamada_exp2 : COMMA llamada_exp
     | empty'''
     pass
-
-def p_llamada_comma(p):
-    '''llamada_comma : COMMA'''
-    drawCompiler.param_k = drawCompiler.param_k + 1
 
 def p_def_array(p):
     '''def_array : LBRACKET def_array_2 '''
