@@ -43,7 +43,6 @@ def compile():
     except SystemExit as e:
       text_console.insert(END, str(e.message))
 
-
 def run():
     compile()
     virtual = VirtualMachine(drawCompiler.quad, drawCompiler.memory_manager)

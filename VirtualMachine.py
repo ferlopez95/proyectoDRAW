@@ -15,6 +15,10 @@ class VirtualMachine:
             rightOperand = quad['rightOperand']
             result = quad['result']
 
+            if (operator == 'param'):
+                i = i + 1
+                continue
+
             if("(" in str(leftOperand)):
                 new_dir = int(leftOperand[1:-1])
                 leftOperand = self.memory.get_var(new_dir)
@@ -106,16 +110,13 @@ class VirtualMachine:
                     print("Index out of bound")
                     break
             elif (operator == "ERA"):
-                continue
+                self.memory.add_context()
             elif (operator == "ENDPROC"):
                 self.memory.erase_context()
                 i = self.stack.pop()
-                print(i)
                 continue
             elif (operator == "GOSUB"):
-                self.memory.add_context()
                 self.stack.append(i + 1)
                 i = self.memory.get_var(leftOperand)
-                print(i)
                 continue
             i+=1
