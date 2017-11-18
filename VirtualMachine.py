@@ -2,11 +2,13 @@ from MemoryManager import MemoryManager
 
 class VirtualMachine:
 
-    def __init__(self, quadruples, mem):
+    def __init__(self, quadruples, mem, dir_func):
         self.quadruples = quadruples
         self.memory = MemoryManager()
         self.memory.copy(mem)
         self.stack = []
+        self.dir_func = dir_func
+        self.scope = []
         i = 0
         while i < len(quadruples) :
             quad = quadruples[i]
@@ -108,6 +110,22 @@ class VirtualMachine:
             elif (operator == "ERA"):
                 self.memory.add_context()
                 self.memory.read_last_memory(True)
+            elif (operator == "PARAM"):
+                mem = self.memory.get_type(leftOperand)
+                value = self.memory.get_var(leftOperand)
+                type = mem.get_type(leftOperand)
+                self.memory.read_last_memory(False)
+                next_dir = 0
+                if(type == 'int'):
+                    next_dir = self.memory.mem_local().next_int()
+                    self.memory.mem_local().add_var(next_dir,value)
+                elif(type == 'float'):
+                    next_dir = self.memory.mem_local().next_float()
+                    self.memory.mem_local().add_var(next_dir,value)
+                elif(type == 'boolean'):
+                    next_dir = self.memory.mem_local().next_boolean()
+                    self.memory.mem_local().add_var(next_dir,value)
+                self.memory.read_last_memory(True)
             elif (operator == "ENDPROC"):
                 self.memory.erase_context()
                 i = self.stack.pop()
@@ -116,5 +134,13 @@ class VirtualMachine:
                 self.stack.append(i + 1)
                 i = self.memory.get_var(leftOperand)
                 self.memory.read_last_memory(False)
+                for key, value in self.dir_func.items():
+                    if(value['counter'] == i):
+                        self.scope.append(key)
                 continue
+            elif (operator == "RETURN"):
+                last_scope = self.scope.pop()
+                result = self.memory.get_var(leftOperand)
+                dir = self.dir_func[last_scope]['dir']
+                self.memory.mem_global.add_var(dir, result)
             i+=1

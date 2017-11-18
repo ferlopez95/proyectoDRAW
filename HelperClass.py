@@ -58,7 +58,7 @@ class HelperClass(object):
         self.dir_func[self.actual_scope]['total_vars'] += 1
 
     def add_func(self, type, id):
-        self.dir_func[id] = {'type' : type, 'parameters' : [], 'total_vars' : 0, 'vars' : {}, 'inner_scope' : [], 'counter' : 0}
+        self.dir_func[id] = {'type' : type, 'parameters' : [], 'total_vars' : 0, 'vars' : {}, 'inner_scope' : [], 'counter' : 0, 'dir' : self.next_func(type,id)}
 
     def add_param(self, type):
         self.dir_func[self.actual_scope]['parameters'].append(type)

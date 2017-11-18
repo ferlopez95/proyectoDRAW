@@ -11,24 +11,27 @@ class Memory:
         self.float_limit = float_limit
         self.boolean = boolean
         self.boolean_limit = boolean_limit
+        self.next_var_int = self.int
+        self.next_var_float = self.float
+        self.next_var_boolean = self.boolean
 
         if (boolean == 36000):
             self.var_boolean[36000] = True
             self.var_boolean[36001] = False
 
     def next_int(self):
-        actual = self.int
-        self.int += 1
+        actual = self.next_var_int
+        self.next_var_int += 1
         return actual
 
     def next_float(self):
-        actual = self.float
-        self.float += 1
+        actual = self.next_var_float
+        self.next_var_float += 1
         return actual
 
     def next_boolean(self):
-        actual = self.boolean
-        self.boolean += 1
+        actual = self.next_var_boolean
+        self.next_var_boolean += 1
         return actual
 
     def add_int(self, dir, val):

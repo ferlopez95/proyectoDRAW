@@ -42,13 +42,19 @@ def compile():
     try:
       parser.parse(code)
       text_console.insert(END, "Successfully compiled!\n")
+      print("quads")
+      i = 0
+      for quad in drawCompiler.quad :
+          print(str(i) + " " + str(quad))
+          i += 1
       return True
     except SystemExit as e:
       text_console.insert(END, str(e))
-
+    
+            
 def run():
     if (compile()):
-        virtual = VirtualMachine(drawCompiler.quad, drawCompiler.memory_manager)
+        virtual = VirtualMachine(drawCompiler.quad, drawCompiler.memory_manager, drawCompiler.dir_func)
         print("Cuadruplos")
         i = 0
         for quad in drawCompiler.quad :
@@ -60,7 +66,7 @@ def run():
         print(virtual.memory.mem_global.var_int)
         print(virtual.memory.mem_global.var_float)
         print(virtual.memory.mem_global.var_boolean)
-        print(virtual.memory.mem_local_stack)
+        print(virtual.memory.mem_local().var_int)
         print(virtual.stack)
 
 ## Menu
@@ -130,7 +136,5 @@ silly.right(90)
 
 silly.forward(50)
 silly.right(90)
-
-turtle.done()
 
 root.mainloop()

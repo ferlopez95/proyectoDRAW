@@ -23,21 +23,21 @@ class Globals(Memory):
         for dir_virtual, cte_val in self.var_int.items():
             if cte_val == cte:
                 return dir_virtual
-        self.var_int[self.int] = cte
+        self.var_int[self.next_var_int] = cte
         return Memory.next_int(self)
 
     def next_float(self, cte):
         for dir_virtual, cte_val in self.var_float.items():
             if cte_val == cte:
                 return dir_virtual
-        self.var_float[self.float] = cte
+        self.var_float[self.next_var_float] = cte
         return Memory.next_float(self)
 
     def next_boolean(self, cte):
         for dir_virtual, cte_val in self.var_boolean.items():
             if cte_val == cte:
                 return dir_virtual
-        self.var_boolean[self.boolean] = cte
+        self.var_boolean[self.next_var_boolean] = cte
         return Memory.next_boolean(self)
         
 # Variables locales
@@ -95,14 +95,14 @@ class Constants(Memory):
         for dir_virtual, cte_val in self.var_int.items():
             if cte_val == cte:
                 return dir_virtual
-        self.var_int[self.int] = cte
+        self.var_int[self.next_var_int] = cte
         return Memory.next_int(self)
 
     def next_float(self, cte):
         for dir_virtual, cte_val in self.var_float.items():
             if cte_val == cte:
                 return dir_virtual
-        self.var_float[self.float] = cte
+        self.var_float[self.next_var_float] = cte
         return Memory.next_float(self)
 
     def next_boolean(self, cte):

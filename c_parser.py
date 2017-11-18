@@ -278,7 +278,6 @@ def p_llamada(p):
     if(drawCompiler.dir_func[p[1]]['type'] != "void"):
         drawCompiler.add_pType(drawCompiler.dir_func[p[1]]['type'])
         next_var = drawCompiler.find_func(drawCompiler.dir_func[p[1]]['type'],p[1])
-        drawCompiler.add_quad("=",p[1],-1,next_var)
         drawCompiler.add_pilaO(next_var)
 
 def p_llamada_id(p):
@@ -316,7 +315,7 @@ def p_llamada_super_exp(p):
 
     if(len(drawCompiler.params)>drawCompiler.param_k):
         if(argumentType == drawCompiler.params[drawCompiler.param_k]):
-            drawCompiler.add_quad("param",argument,-1,"param" + str(drawCompiler.param_k))
+            drawCompiler.add_quad("PARAM",argument,-1,"param" + str(drawCompiler.param_k))
             drawCompiler.param_k = drawCompiler.param_k + 1;
         else:
             message = "Error: Type Mismatch in Parameters (Línea " + str(p.lexer.lineno) + ")"
@@ -731,13 +730,13 @@ def p_while_end(p):
 
 def p_funcion(p):
     '''funcion :  DEF funcion_aux '''
-    pass
+    drawCompiler.add_quad("ENDPROC", -1, -1, -1)
+    drawCompiler.reset_memory()
 
 def p_funcion_aux(p):
     ''' funcion_aux : funcion_1 var_local bloque funcion_2
         | funcion_void var_local bloque funcion_end'''
-    drawCompiler.add_quad("ENDPROC", -1, -1, -1)
-    drawCompiler.reset_memory()
+    pass
 
 def p_funcion_void(p):
     '''funcion_void :  VOID ID'''

@@ -58,12 +58,12 @@ class MemoryManager:
         self.mem_global.var_boolean = mem.mem_global.var_boolean
 
     def reset_memory(self):
-        self.mem_local().int = 10000
-        self.mem_local().float = 12000
-        self.mem_local().boolean = 14000
-        self.mem_temp().int = 16000
-        self.mem_temp().float = 20000
-        self.mem_temp().boolean = 24000
+        self.mem_local().next_var_int = 10000
+        self.mem_local().next_var_float = 12000
+        self.mem_local().next_var_boolean = 14000
+        self.mem_temp().next_var_int = 16000
+        self.mem_temp().next_var_float = 20000
+        self.mem_temp().next_var_boolean = 24000
 
     def add_context(self):
         self.mem_local_stack.append(Locals())
