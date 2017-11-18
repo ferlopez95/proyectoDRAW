@@ -16,7 +16,7 @@ root = Tk()
 root.title("Draw compiler")
 
 ## Inicializa text boxes para el codigo, consola y resultado
-text_code = Text(root, height=25, width=40)
+text_code = Text(root, height=28, width=65)
 text_console = Text(root, height=10, width=125)
 canvas = Canvas(root, height=400, width=400)
 
