@@ -183,7 +183,9 @@ def p_vars(p):
             print(message)
             sys.exit()
         else:
-            drawCompiler.add_var(p[1], p[2])
+            next_dir = drawCompiler.next_var_draw()
+            drawCompiler.add_var(p[1], p[2], next_dir)
+            drawCompiler.add_quad("NEWDRAW",-1,-1,next_dir)
 
 def p_vars_id(p):
     '''vars_id : data_type ID'''
@@ -276,9 +278,13 @@ def p_llamada(p):
     drawCompiler.add_quad("GOSUB",counter,-1,-1)
     drawCompiler.param_k = 0
     if(drawCompiler.dir_func[p[1]]['type'] != "void"):
-        drawCompiler.add_pType(drawCompiler.dir_func[p[1]]['type'])
-        next_var = drawCompiler.find_func(drawCompiler.dir_func[p[1]]['type'],p[1])
-        drawCompiler.add_pilaO(next_var)
+        type = drawCompiler.dir_func[p[1]]['type']
+        next_temp = drawCompiler.next_temp(type)
+        drawCompiler.add_pType(type)
+        drawCompiler.add_pilaO(next_temp)
+        dir = drawCompiler.find_func(drawCompiler.dir_func[p[1]]['type'],p[1])
+        drawCompiler.add_quad('=',dir,-1,next_temp)
+
 
 def p_llamada_id(p):
     ''' llamada_id : ID LPAREN'''
@@ -287,10 +293,12 @@ def p_llamada_id(p):
         print(message)
         sys.exit()
     else:
+        drawCompiler.add_pOper("(")
         drawCompiler.add_quad("ERA",-1,-1,-1)
         drawCompiler.param_k = 0
         drawCompiler.params = drawCompiler.dir_func[p[1]]['parameters']
         p[0] = p[1]
+
 
 def p_llamada_2(p):
     '''llamada_2 : llamada_exp llamada_rparen
@@ -303,6 +311,7 @@ def p_llamada_rparen(p):
         message = "Error: Wrong number of parameters (Línea " + str(p.lexer.lineno) + ")"
         print(message)
         sys.exit()
+    drawCompiler.pop_pOper()
 
 def p_llamada_exp(p):
     '''llamada_exp : llamada_super_exp llamada_exp2'''
@@ -399,6 +408,7 @@ def p_exp(p):
         leftOperand = drawCompiler.pop_pilaO()
         left_type = drawCompiler.pop_pType()
         operator = drawCompiler.pop_pOper()
+
         result_type = drawCompiler.semantic_check(left_type,right_type,operator)
         if(result_type != 'error'):
             result = drawCompiler.next_temp(result_type)
@@ -450,8 +460,12 @@ def p_var_cte(p):
     pass
 
 def p_var_cte_i(p):
-    ''' var_cte_i : CTE_I '''
-    dir_virtual = drawCompiler.next_var_cte('int',p[1])
+    ''' var_cte_i : CTE_I
+    | MINUS CTE_I '''
+    if(len(p) == 2):
+        dir_virtual = drawCompiler.next_var_cte('int',p[1])
+    else:
+        dir_virtual = drawCompiler.next_var_cte('int',-1*p[2])
     drawCompiler.add_pilaO(dir_virtual)
     drawCompiler.add_pType("int")
 
@@ -508,12 +522,16 @@ def p_var_cte_1(p):
             drawCompiler.add_pType(drawCompiler.get_type(p[1]))
 
 def p_var_cte_2(p):
-    ''' var_cte_2 : LBRACKET super_exp var_cte_3
+    ''' var_cte_2 : var_cte_2_lbracket super_exp var_cte_3
     | empty '''
     if(len(p) == 4):
         p[0] = 1 + p[3]
     else:
         p[0] = 0
+
+def p_var_cte_2_lbracket(p):
+    ''' var_cte_2_lbracket : LBRACKET '''
+    drawCompiler.add_pOper("(")
 
 def p_var_cte_3(p):
     '''var_cte_3 : RBRACKET
@@ -522,6 +540,7 @@ def p_var_cte_3(p):
         p[0] = 1
     else:
         p[0] = 0
+    drawCompiler.pop_pOper()
 
 def p_factor(p):
     '''factor : lparen_factor super_exp rparen_factor
@@ -599,41 +618,60 @@ def p_ciclo(p):
     pass
 
 def p_accion(p):
-    '''accion : ID POINT accion_nombre accion_params SEMICOLON'''
-    pass
+    '''accion : accion_id POINT accion_params SEMICOLON'''
+    action_name = p[3]['action']
+    params = p[3]['params']
+    params.reverse()
+    for param in params:
+        drawCompiler.add_quad("DRAWPARAM", param, -1, -1)
+    drawCompiler.add_quad(action_name, -1, -1, p[1])
+
+def p_accion_id(p):
+    ''' accion_id : ID '''
+    type = drawCompiler.get_type(p[1])
+    if(type == "Draw"):
+        p[0] = drawCompiler.get_dir_virtual(p[1])
+    else:
+        if(drawCompiler.exists_in_scope(p[1])):
+            message = "Unknown function for " + type + " object in line " +  str(p.lexer.lineno)
+        else:
+            message = "Variable was not declared in line " + str(p.lexer.lineno)
+        print(message)
+        sys.exit()
 
 def p_accion_params(p):
-    ''' accion_params : LPAREN accion_params_2 '''
-    pass
-
-def p_accion_params_2(p):
-    ''' accion_params_2 : accion_params_cte RPAREN
-    | RPAREN '''
-    pass
-
-def p_accion_params_cte(p):
-    ''' accion_params_cte : var_cte accion_params_cte_2'''
-    pass
-
-def p_accion_params_cte_2(p):
-    ''' accion_params_cte_2 : COMMA accion_params_cte
-    | empty '''
-    pass
-
-def p_accion_llamada(p):
-    ''' accion_nombre :  SETPOSITION
-    | CIRCLE
-    | RIGHT
-    | LEFT
-    | HIDE
-    | SQUARE
-    | CLEAR
-    | SHOW
-    | BACK
-    | SPEED
-    | FORWARD
-    | SETCOLOR '''
-    pass
+    ''' accion_params :  SETPOSITION LPAREN exp COMMA exp RPAREN
+    | CIRCLE LPAREN exp RPAREN
+    | RIGHT LPAREN exp RPAREN
+    | LEFT LPAREN exp RPAREN
+    | HIDE LPAREN RPAREN
+    | SQUARE LPAREN exp RPAREN
+    | CLEAR LPAREN RPAREN
+    | SHOW LPAREN RPAREN
+    | BACK LPAREN exp RPAREN
+    | SPEED LPAREN exp RPAREN
+    | FORWARD LPAREN exp RPAREN 
+    | SETCOLOR LPAREN exp COMMA exp COMMA exp RPAREN'''
+    if (len(p) == 4):
+        p[0] = {
+            'action' : p[1],
+            'params' : []
+        }
+    elif (len(p) == 5):
+        p[0] = {
+            'action' : p[1],
+            'params' : [drawCompiler.pop_pilaO()]
+        }
+    elif (len(p) == 7):
+        p[0] = {
+            'action' : p[1],
+            'params' : [drawCompiler.pop_pilaO(), drawCompiler.pop_pilaO()]
+        }
+    elif (len(p) == 9):
+        p[0] = {
+            'action' : p[1],
+            'params' : [drawCompiler.pop_pilaO(), drawCompiler.pop_pilaO(), drawCompiler.pop_pilaO()]
+        }
 
 def p_for(p):
     '''for : for_init LPAREN for_exp COMMA for_exp COMMA for_exp2 for_rparen bloque for_end'''

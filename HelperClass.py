@@ -17,7 +17,7 @@ class HelperClass(object):
         self.params = []
         self.sem_cube = SemanticCube().cube
         self.memory_manager = MemoryManager()
-        
+
     def reset(self):
         self.actual_scope = 'global'
         self.dir_func = {}
@@ -33,17 +33,19 @@ class HelperClass(object):
         self.sem_cube = SemanticCube().cube
         self.memory_manager = MemoryManager()
         self.add_func('void', 'global')
-        
+
     def exists_in_scope(self, id):
+        if (id in self.vars_table()) :
+               return 1
         if (len(self.inner_scopes()) >= 1):
             if (id in self.vars_table()) :
                 return 1
             for key in self.inner_scopes():
                 if id in key:
                     return 1
-        else:
-            if (id in self.vars_table()) :
-                return 1
+        global_table = self.dir_func['global']['vars']
+        if (id in global_table):
+            return 1
 
     def add_var(self, type, id, dir_virtual):
         if (len(self.inner_scopes()) >= 1):
@@ -77,7 +79,7 @@ class HelperClass(object):
         self.inner_scopes().append({})
 
     def pop_inner_scope(self):
-        self.inner_scopes().pop()
+        scope = self.inner_scopes().pop()
 
     def inner_scopes(self):
         return self.dir_func[self.actual_scope]['inner_scope']
@@ -196,6 +198,13 @@ class HelperClass(object):
         elif var_type == 'boolean':
             return self.memory_manager.mem_global.next_boolean(cte)
 
+    def next_var_draw(self):
+        if(self.actual_scope == 'global'):
+            return self.memory_manager.mem_global.next_draw()
+        else:
+            return self.memory_manager.mem_local().next_draw()
+
+
     def find_func(self,func_type,func_id):
         if func_type == 'int':
             for dir_virtual, cte_val in self.memory_manager.mem_global.var_int.items():
@@ -231,17 +240,60 @@ class HelperClass(object):
         self.quad[line]['result'] = value
 
     def get_dir_virtual(self, id):
-        return self.dir_func[self.actual_scope]['vars'][id]['dir_virtual']
+        if (id in self.vars_table()) :
+            return self.dir_func[self.actual_scope]['vars'][id]['dir_virtual']
+
+        if (len(self.inner_scopes()) >= 1):
+            for scope in self.inner_scopes():
+                if id in scope:
+                    return scope[id]['dir_virtual']
+
+        global_table = self.dir_func['global']['vars']
+        if (id in global_table):
+            return self.dir_func['global']['vars'][id]['dir_virtual']
+
 
     def get_dim_array(self,id):
-        return self.dir_func[self.actual_scope]['vars'][id]['dim_total']
+        if (id in self.vars_table()) :
+            return self.dir_func[self.actual_scope]['vars'][id]['dim_total']
+
+        if (len(self.inner_scopes()) >= 1):
+            for scope in self.inner_scopes():
+                if id in scope:
+                    return scope[id]['dim_total']
+
+        global_table = self.dir_func['global']['vars']
+        if (id in global_table):
+            return self.dir_func['global']['vars'][id]['dim_total']
+
 
     def get_dim1_array(self,id):
-        return self.dir_func[self.actual_scope]['vars'][id]['dim1']
+        if (id in self.vars_table()) :
+            return self.dir_func[self.actual_scope]['vars'][id]['dim1']
+
+        if (len(self.inner_scopes()) >= 1):
+            for scope in self.inner_scopes():
+                if id in scope:
+                    return scope[id]['dim1']
+
+        global_table = self.dir_func['global']['vars']
+        if (id in global_table):
+            return self.dir_func['global']['vars'][id]['dim1']
+
 
     def get_dim2_array(self,id):
-        return self.dir_func[self.actual_scope]['vars'][id]['dim2']
-    
+        if (id in self.vars_table()) :
+            return self.dir_func[self.actual_scope]['vars'][id]['dim2']
+
+        if (len(self.inner_scopes()) >= 1):
+            for scope in self.inner_scopes():
+                if id in scope:
+                    return scope[id]['dim2']
+
+        global_table = self.dir_func['global']['vars']
+        if (id in global_table):
+            return self.dir_func['global']['vars'][id]['dim2']
+
     def add_array(self, type, id, dir_virtual, dim1, dim2):
         if (len(self.inner_scopes()) >= 1):
             inner = self.inner_scopes().pop()

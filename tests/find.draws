@@ -1,0 +1,23 @@
+main()
+array<int,10> i = [1,2,3,4,5,6,7,8,9,10];
+
+int length = 9;
+boolean find = False;
+int j = 0;
+int objetivo = 2;
+
+while(j <= length)
+	if(i[j] == objetivo)
+		find = True;
+	end
+	j = j + 1;
+end
+
+
+if(find == True)
+	print(1);
+else
+	print(-1);
+end
+
+end

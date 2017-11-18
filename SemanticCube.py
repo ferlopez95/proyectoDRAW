@@ -50,4 +50,5 @@ class SemanticCube:
                                             '=': 'float'}},
                          'boolean' : {'boolean' : {'&&' : 'boolean',
                                              '||' : 'boolean',
-                                             '=' : 'boolean'}}}
+                                             '=' : 'boolean',
+                                             '==' : 'boolean'}}}

@@ -11,7 +11,6 @@ from tkinter import *
 parser = c_parser.parser
 drawCompiler = c_parser.drawCompiler
 
-
 ## Inicializa libreria de graficos
 root = Tk()
 root.title("Draw compiler")
@@ -42,11 +41,6 @@ def compile():
     try:
       parser.parse(code)
       text_console.insert(END, "Successfully compiled!\n")
-      print("quads")
-      i = 0
-      for quad in drawCompiler.quad :
-          print(str(i) + " " + str(quad))
-          i += 1
       return True
     except SystemExit as e:
       text_console.insert(END, str(e))
@@ -54,7 +48,8 @@ def compile():
             
 def run():
     if (compile()):
-        virtual = VirtualMachine(drawCompiler.quad, drawCompiler.memory_manager, drawCompiler.dir_func)
+        clean_canvas()
+        virtual = VirtualMachine(drawCompiler.quad, drawCompiler.memory_manager, drawCompiler.dir_func, canvas)
         print("Cuadruplos")
         i = 0
         for quad in drawCompiler.quad :
@@ -64,10 +59,12 @@ def run():
             print(str(key) + " : " + str(value))
         print (drawCompiler.pilaO)
         print(virtual.memory.mem_global.var_int)
-        print(virtual.memory.mem_global.var_float)
-        print(virtual.memory.mem_global.var_boolean)
         print(virtual.memory.mem_local().var_int)
+        print(virtual.memory.mem_const.var_int)
         print(virtual.stack)
+
+def clean_canvas():
+    canvas.delete("all")
 
 ## Menu
 menubar = Menu(root)
@@ -124,17 +121,7 @@ canvas.grid(row=2, column=1)
 ## Turtles
 
 silly = turtle.RawTurtle(canvas)
+silly.hideturtle()
 
-silly.forward(50)
-silly.right(90)     # Rotate clockwise by 90 degrees
-
-silly.forward(50)
-silly.right(90)
-
-silly.forward(50)
-silly.right(90)
-
-silly.forward(50)
-silly.right(90)
 
 root.mainloop()

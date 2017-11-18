@@ -40,7 +40,7 @@ class MemoryManager:
 
     # Funcion para saber el tipo de memoria al que se quiere acceder de acuerdo a la direccion virtual
     def get_type(self, dir_virtual):
-        if (self.between(dir_virtual, self.mem_global.int, self.mem_global.boolean_limit)):
+        if (self.between(dir_virtual, self.mem_global.int, self.mem_global.draw_limit)):
             return self.mem_global
         elif (self.between(dir_virtual, self.mem_local().int, self.mem_local().boolean_limit)):
             return self.mem_local()
@@ -56,14 +56,15 @@ class MemoryManager:
         self.mem_global.var_int = mem.mem_global.var_int
         self.mem_global.var_float = mem.mem_global.var_float
         self.mem_global.var_boolean = mem.mem_global.var_boolean
+        self.mem_global.var_draw = mem.mem_global.var_draw
 
     def reset_memory(self):
-        self.mem_local().next_var_int = 10000
-        self.mem_local().next_var_float = 12000
-        self.mem_local().next_var_boolean = 14000
-        self.mem_temp().next_var_int = 16000
-        self.mem_temp().next_var_float = 20000
-        self.mem_temp().next_var_boolean = 24000
+        self.mem_local().next_var_int = 12000
+        self.mem_local().next_var_float = 14000
+        self.mem_local().next_var_boolean = 16000
+        self.mem_temp().next_var_int = 18000
+        self.mem_temp().next_var_float = 22000
+        self.mem_temp().next_var_boolean = 26000
 
     def add_context(self):
         self.mem_local_stack.append(Locals())

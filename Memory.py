@@ -1,5 +1,7 @@
 ## Clase memoria
 ## Contiene 3 diccionarios para almacenar variables enteras, flotantes y booleanas
+import turtle
+
 class Memory:
     def __init__(self, int, int_limit, float, float_limit, boolean, boolean_limit ):
         self.var_int = {}
@@ -14,10 +16,11 @@ class Memory:
         self.next_var_int = self.int
         self.next_var_float = self.float
         self.next_var_boolean = self.boolean
+        self.var_draw = {}
 
-        if (boolean == 36000):
-            self.var_boolean[36000] = True
-            self.var_boolean[36001] = False
+        if (boolean == 34000):
+            self.var_boolean[34000] = True
+            self.var_boolean[34001] = False
 
     def next_int(self):
         actual = self.next_var_int
@@ -43,6 +46,9 @@ class Memory:
     def add_boolean(self, dir, val):
         self.var_boolean[dir] = val
 
+    def add_draw(self, dir, val):
+        self.var_draw[dir] = val
+
     def add_var(self, dir_virtual, val):
         type = self.get_type(dir_virtual)
         if (type == 'int'):
@@ -51,6 +57,8 @@ class Memory:
             self.add_float(dir_virtual, float(val))
         elif (type == 'boolean'):
             self.add_boolean(dir_virtual, val)
+        elif (type == 'draw'):
+            self.add_draw(dir_virtual)
 
     def get_var(self, dir_virtual):
         type = self.get_type(dir_virtual)
@@ -60,6 +68,8 @@ class Memory:
             return self.var_float[dir_virtual]
         elif (type == 'boolean'):
             return self.var_boolean[dir_virtual]
+        elif (type == 'draw'):
+            return self.var_draw[dir_virtual]
 
     def between(self, dir_virtual, dir_inicial, dir_final):
         return dir_virtual >= dir_inicial and dir_virtual <= dir_final
@@ -71,11 +81,13 @@ class Memory:
             return 'float'
         elif (self.between(dir_virtual, self.boolean, self.boolean_limit)):
             return 'boolean'
+        elif (self.between(dir_virtual, 10000, 11999)):
+            return 'draw'
 
     def array_dim(self,type,dir_virtual,dim):
         if(type == 'int'):
-            self.int = self.int + dim - 1
+            self.next_var_int = self.next_var_int + dim - 1
         elif(type == 'float'):
-            self.float = self.float + dim - 1
+            self.next_var_float = self.next_var_float + dim - 1
         elif(type == 'boolean'):
-            self.boolean = self.boolean + dim - 1
+            self.next_var_boolean = self.next_var_boolean + dim - 1

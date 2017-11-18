@@ -1,14 +1,18 @@
 from MemoryManager import MemoryManager
+import turtle
+from tkinter import *
 
 class VirtualMachine:
 
-    def __init__(self, quadruples, mem, dir_func):
+    def __init__(self, quadruples, mem, dir_func, canvas):
         self.quadruples = quadruples
         self.memory = MemoryManager()
         self.memory.copy(mem)
         self.stack = []
         self.dir_func = dir_func
         self.scope = []
+        self.canvas = canvas
+        self.draw_params = []
         i = 0
         while i < len(quadruples) :
             quad = quadruples[i]
@@ -143,4 +147,70 @@ class VirtualMachine:
                 result = self.memory.get_var(leftOperand)
                 dir = self.dir_func[last_scope]['dir']
                 self.memory.mem_global.add_var(dir, result)
+            elif (operator == "NEWDRAW"):
+                new_turtle = turtle.RawTurtle(canvas)
+                self.memory.mem_global.add_draw(result, new_turtle)
+            elif (operator == "DRAWPARAM"):
+                value = self.memory.get_var(leftOperand)
+                self.draw_params.append(value)
+            elif (operator == "forward"):
+                t = self.memory.get_var(result)
+                val = self.draw_params.pop()
+                t.forward(val)
+            elif (operator == "setPosition"):
+                t = self.memory.get_var(result)
+                val2 = self.draw_params.pop()
+                val1 = self.draw_params.pop()
+                t.hideturtle()
+                t.penup()
+                t.setx(val1)
+                t.sety(val2)
+                t.pendown()
+                t.showturtle()
+            elif (operator == "circle"):
+                t = self.memory.get_var(result)
+                val = self.draw_params.pop()
+                t.circle(val)
+            elif (operator == "right"):
+                t = self.memory.get_var(result)
+                val = self.draw_params.pop()
+                t.right(val)
+            elif (operator == "left"):
+                t = self.memory.get_var(result)
+                val = self.draw_params.pop()
+                t.left(val)
+            elif (operator == "hide"):
+                t = self.memory.get_var(result)
+                t.hideturtle()
+            elif (operator == "square"):
+                t = self.memory.get_var(result)
+                val = self.draw_params.pop()
+                t.forward(val)
+                t.right(90)
+                t.forward(val)
+                t.right(90)
+                t.forward(val)
+                t.right(90)
+                t.forward(val)
+                t.right(90)
+            elif (operator == "clear"):
+                t = self.memory.get_var(result)
+                t.clear(val)
+            elif (operator == "show"):
+                t = self.memory.get_var(result)
+                t.showturtle()
+            elif (operator == "back"):
+                t = self.memory.get_var(result)
+                val = self.draw_params.pop()
+                t.back(val)
+            elif (operator == "speed"):
+                t = self.memory.get_var(result)
+                val = self.draw_params.pop()
+                t.speed(val)
+            elif (operator == "setColor"):
+                t = self.memory.get_var(result)
+                val3 = self.draw_params.pop()
+                val2 = self.draw_params.pop()
+                val1 = self.draw_params.pop()
+                t.pencolor(float(val1/255),float(val2/255),float(val3/255))
             i+=1
