@@ -53,7 +53,7 @@ def run():
         print("Cuadruplos")
         i = 0
         for quad in drawCompiler.quad :
-            print(str(i) + " " + str(quad))
+            print(str(i) + " (" + str(quad['operator']) + "," + str(quad['leftOperand']) + "," + str(quad['rightOperand']) + "," + str(quad['result']) + ")")
             i += 1
         for key, value in drawCompiler.dir_func.items() :
             print(str(key) + " : " + str(value))

@@ -1,13 +1,16 @@
+#Función que regresa el factorial de un numero dado
 def int factorial(int n)
 	int result;
 	if (n==0)
 		result = 1;
 	else
+		#Llamada recursiva con el valor anterior de n
 		result = n * factorial(n-1);
 	end
 	return result;
 end
 
+#Programa que imprime el factorial de 10
 main()
 int a = factorial(10);
 print(a);

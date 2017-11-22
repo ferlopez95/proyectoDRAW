@@ -68,10 +68,7 @@ tokens = (
     #Otros
     'ID',
     'CTE_I',
-    'CTE_F',
-    'HASHTAG',
-    'TEXTO',
-    'NEWLINE'
+    'CTE_F'
     
 ) + tuple(reserved.values())
 
@@ -97,9 +94,6 @@ t_OR = r'\|\|'
 t_PERCENT = r'%'
 t_LESSEQUAL = r'<='
 t_GREATEREQUAL = r'>='
-t_HASHTAG = r'\#'
-t_TEXTO = r'[a-zA-Z0-9_]+[a-zA-Z0-9_ ]*'
-t_NEWLINE = r'\n'
 t_ignore_COMMENT = r'\#.*'
 
 def t_CTE_F(t):

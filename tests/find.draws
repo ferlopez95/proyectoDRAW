@@ -1,11 +1,17 @@
+#Programa que busca un valor en un arreglo
+# y regresa 1 si lo encuentra, si no -1
 main()
 array<int,10> i = [1,2,3,4,5,6,7,8,9,10];
 
+#Longitud del arreglo
 int length = 9;
+#Bandera para verificar si encontro el valor
 boolean find = False;
 int j = 0;
+#Valor a buscar
 int objetivo = 2;
 
+#Ciclo para buscar el valor en el arreglo
 while(j <= length)
 	if(i[j] == objetivo)
 		find = True;
@@ -13,7 +19,7 @@ while(j <= length)
 	j = j + 1;
 end
 
-
+#Verifica si encontro o no el valor e imprime el resultado
 if(find == True)
 	print(1);
 else

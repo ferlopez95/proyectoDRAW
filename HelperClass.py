@@ -10,7 +10,6 @@ class HelperClass(object):
         self.pType = []
         self.pilaO = []
         self.quad = []
-        self.temp = 0
         self.pJumps = []
         self.cont = 0
         self.param_k = 0
@@ -150,10 +149,6 @@ class HelperClass(object):
     def add_quad(self,operator,leftOperand,rightOperand,result):
         self.quad.append({'operator':operator,'leftOperand':leftOperand,'rightOperand':rightOperand,'result':result})
         self.cont = self.cont + 1
-
-    def next(self):
-        self.temp = self.temp + 1
-        return self.temp
 
     def next_temp(self,var_type):
         if var_type == 'int':

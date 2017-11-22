@@ -1,10 +1,4 @@
-Created by PLY version 3.7 (http://www.dabeaz.com/ply)
-
-Unused terminals:
-
-    HASHTAG
-    TEXTO
-    NEWLINE
+Created by PLY version 3.10 (http://www.dabeaz.com/ply)
 
 Grammar
 
@@ -193,7 +187,6 @@ FORWARD              : 125
 GLOBAL               : 11
 GREATER              : 43 71
 GREATEREQUAL         : 72
-HASHTAG              : 
 HIDE                 : 119
 ID                   : 31 38 41 43 51 93 114 140 141 147
 IF                   : 106
@@ -205,7 +198,6 @@ LESSEQUAL            : 74
 LPAREN               : 21 29 38 51 102 104 115 116 117 118 119 120 121 122 123 124 125 126 127 133 144
 MAIN                 : 21
 MINUS                : 89 151
-NEWLINE              : 
 OR                   : 156
 PERCENT              : 154
 PLUS                 : 150
@@ -221,7 +213,6 @@ SETPOSITION          : 115
 SHOW                 : 122
 SPEED                : 124
 SQUARE               : 120
-TEXTO                : 
 TIMES                : 152
 TRUE                 : 91
 VOID                 : 140
