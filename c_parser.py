@@ -100,7 +100,7 @@ def p_asignacion(p):
 def p_asignacion_id(p):
     '''asignacion_id : ID asignacion_array'''
     if not drawCompiler.exists_in_scope(p[1]) : 
-        message = "Error: La variable " + p[1] + " no esta definida (Línea " + str(p.lexer.lineno) + ")"
+        message = "Error: The variable " + p[1] + " is not defined (Line " + str(p.lexer.lineno) + ")"
         print(message)
         sys.exit()
     else:
@@ -149,7 +149,7 @@ def p_asignacion_2(p):
             drawCompiler.add_quad(operator,rightOperand,-1,leftOperand)
         else:
             drawCompiler.erase_dir_func()
-            message = "Type Mismatch in line " + str(p.lexer.lineno)
+            message = "Error: Type Mismatch in line " + str(p.lexer.lineno)
             print(message)
             sys.exit()
 
@@ -179,7 +179,7 @@ def p_vars(p):
     | vars_aux'''
     if len(p) >= 4:
         if drawCompiler.exists_in_scope(p[2]):
-            message = "Error: La variable " + p[2] + " ya está definida (Línea " + str(p.lexer.lineno) + ")"
+            message = "Error: The variable " + p[2] + " is already defined (Line " + str(p.lexer.lineno) + ")"
             print(message)
             sys.exit()
         else:
@@ -191,7 +191,7 @@ def p_vars(p):
 def p_vars_id(p):
     '''vars_id : data_type ID'''
     if drawCompiler.exists_in_scope(p[2]):
-        message = "Error: La variable " + p[2] + " ya está definida (Línea " + str(p.lexer.lineno) + ")"
+        message = "Error: The variable " + p[2] + " is already defined (Line " + str(p.lexer.lineno) + ")"
         print(message)
         sys.exit()
     else:
@@ -215,7 +215,7 @@ def p_vars_aux(p):
 def p_array(p):
     ''' array : ARRAY LESS data_type COMMA CTE_I array_2 GREATER ID'''
     if drawCompiler.exists_in_scope(p[8]):
-        message = "Error: La variable " + p[8] + " ya está definida (Línea " + str(p.lexer.lineno) + ")"
+        message = "Error: The variable " + p[8] + " is already defined (Line " + str(p.lexer.lineno) + ")"
         print(message)
         sys.exit()
     else:
@@ -227,12 +227,12 @@ def p_array(p):
                 dir_virtual = drawCompiler.next_var(p[3])
                 drawCompiler.add_array(p[3], p[8], dir_virtual, p[5], p[6])
             else:
-                message = "Error: La variable " + p[8] + " la dimensión de un arreglo no puede ser negativa (Línea " + str(p.lexer.lineno) + ")"
+                message = "Error: The dimesion " + p[8] + " can not be negative (Line " + str(p.lexer.lineno) + ")"
                 print(message)
                 sys.exit()
             p[0] = p[8]
         else:
-            message = "Error: La variable " + p[8] + " la dimensión de un arreglo no puede ser negativa (Línea " + str(p.lexer.lineno) + ")"
+            message = "Error: The dimension " + p[8] + " can not be negative (Line " + str(p.lexer.lineno) + ")"
             print(message)
             sys.exit()
 
@@ -258,7 +258,7 @@ def p_vars_2(p):
             drawCompiler.add_quad(operator,rightOperand,-1,leftOperand)
         else:
             drawCompiler.erase_dir_func()
-            message = "Type Mismatch in line " + str(p.lexer.lineno)
+            message = "Error: Type Mismatch in line " + str(p.lexer.lineno)
             print(message)
             sys.exit()
     else:
@@ -290,7 +290,7 @@ def p_llamada(p):
 def p_llamada_id(p):
     ''' llamada_id : ID LPAREN'''
     if not drawCompiler.exists_func(p[1]):
-        message = "Error: La función " + p[1] + " no está definida (Línea " + str(p.lexer.lineno) + ")"
+        message = "Error: The function " + p[1] + " is not defined (Line " + str(p.lexer.lineno) + ")"
         print(message)
         sys.exit()
     else:
@@ -309,7 +309,7 @@ def p_llamada_2(p):
 def p_llamada_rparen(p):
     '''llamada_rparen : RPAREN'''
     if(drawCompiler.param_k != len(drawCompiler.params)):
-        message = "Error: Wrong number of parameters (Línea " + str(p.lexer.lineno) + ")"
+        message = "Error: Wrong number of parameters (Line " + str(p.lexer.lineno) + ")"
         print(message)
         sys.exit()
     drawCompiler.pop_pOper()
@@ -328,11 +328,11 @@ def p_llamada_super_exp(p):
             drawCompiler.add_quad("PARAM",argument,-1,"param" + str(drawCompiler.param_k))
             drawCompiler.param_k = drawCompiler.param_k + 1;
         else:
-            message = "Error: Type Mismatch in Parameters (Línea " + str(p.lexer.lineno) + ")"
+            message = "Error: Type Mismatch in Parameters (Line " + str(p.lexer.lineno) + ")"
             print(message)
             sys.exit()
     else:
-        message = "Error: Wrong number of parameters (Línea " + str(p.lexer.lineno) + ")"
+        message = "Error: Wrong number of parameters (Line " + str(p.lexer.lineno) + ")"
         print(message)
         sys.exit()
 
@@ -383,7 +383,7 @@ def p_expresion(p):
             drawCompiler.add_pType(result_type)
         else:
             drawCompiler.erase_dir_func()
-            message = "Type Mismatch in line " + str(p.lexer.lineno)
+            message = "Error: Type Mismatch in line " + str(p.lexer.lineno)
             print(message)
             sys.exit()
 
@@ -418,7 +418,7 @@ def p_exp(p):
             drawCompiler.add_pType(result_type)
         else:
             drawCompiler.erase_dir_func()
-            message = "Type Mismatch in line " + str(p.lexer.lineno)
+            message = "Error: Type Mismatch in line " + str(p.lexer.lineno)
             print(message)
             sys.exit()
 
@@ -443,7 +443,7 @@ def p_termino(p):
             drawCompiler.add_pType(result_type)
         else:
             drawCompiler.erase_dir_func()
-            message = "Type Mismatch in line " + str(p.lexer.lineno)
+            message = "Error: Type Mismatch in line " + str(p.lexer.lineno)
             print(message)
             sys.exit()
         
@@ -486,7 +486,7 @@ def p_var_cte_b(p):
 def p_var_cte_1(p):
     ''' var_cte_1 : ID var_cte_2 '''
     if not drawCompiler.exists_in_scope(p[1]) : 
-        message = "Error: La variable " + p[1] + " no esta definida (Línea " + str(p.lexer.lineno) + ")"
+        message = "Error: The variable " + p[1] + " is not defined (Line " + str(p.lexer.lineno) + ")"
         print(message)
         sys.exit()
     else:
@@ -562,7 +562,7 @@ def p_factor(p):
                 drawCompiler.add_pType(result_type)
             else:
                 drawCompiler.erase_dir_func()
-                message = "Type Mismatch in line " + str(p.lexer.lineno)
+                message = "Error: Type Mismatch in line " + str(p.lexer.lineno)
                 print(message)
                 sys.exit()
 
@@ -582,7 +582,7 @@ def p_rparen_condicion(p):
     ''' rparen_condicion : RPAREN '''
     exp_type = drawCompiler.pop_pType()
     if(exp_type != 'boolean'):
-        message = "Type Mismatch in line " +  str(p.lexer.lineno) + " expression should be boolean"
+        message = "Error: Type Mismatch in line " +  str(p.lexer.lineno) + " expression should be boolean"
         print(message)
         sys.exit()
     else:
@@ -634,9 +634,9 @@ def p_accion_id(p):
         p[0] = drawCompiler.get_dir_virtual(p[1])
     else:
         if(drawCompiler.exists_in_scope(p[1])):
-            message = "Unknown function for " + type + " object in line " +  str(p.lexer.lineno)
+            message = "Error: Unknown function for " + type + " object in line " +  str(p.lexer.lineno)
         else:
-            message = "Variable was not declared in line " + str(p.lexer.lineno)
+            message = "Error: Variable was not declared in line " + str(p.lexer.lineno)
         print(message)
         sys.exit()
 
@@ -681,14 +681,14 @@ def p_for(p):
 def p_for_exp(p):
     '''for_exp : exp'''
     if (drawCompiler.top_pType() != "int" and drawCompiler.top_pType() != "float"):
-        message = "Type Mismatch in line " +  str(p.lexer.lineno) + " expression should be int or float"
+        message = "Error: Type Mismatch in line " +  str(p.lexer.lineno) + " expression should be int or float"
         print(message)
         sys.exit()
 
 def p_for_exp2(p):
     '''for_exp2 : exp'''
     if (drawCompiler.top_pType() != "int" and drawCompiler.top_pType() != "float"):
-        message = "Type Mismatch in line " +  str(p.lexer.lineno) + " expression should be int or float"
+        message = "Error: Type Mismatch in line " +  str(p.lexer.lineno) + " expression should be int or float"
         print(message)
         sys.exit()
     else:
@@ -751,7 +751,7 @@ def p_rparen_while(p):
     '''rparen_while : RPAREN'''
     exp_type = drawCompiler.pop_pType()
     if(exp_type != 'boolean'):
-        message = "Type Mismatch in line " +  str(p.lexer.lineno) + " expression should be boolean"
+        message = "Error: Type Mismatch in line " +  str(p.lexer.lineno) + " expression should be boolean"
         print(message)
         sys.exit()
     else:
@@ -780,7 +780,7 @@ def p_funcion_aux(p):
 def p_funcion_void(p):
     '''funcion_void :  VOID ID'''
     if drawCompiler.exists_func(p[2]):
-        message = "La función " + str(p[2]) + " ya está definida"
+        message = "The function " + str(p[2]) + " is already defined"
         print(message)
         sys.exit()
     else:
@@ -790,7 +790,7 @@ def p_funcion_void(p):
 def p_funcion_1(p):
     '''funcion_1 :  data_type_func ID'''
     if drawCompiler.exists_func(p[2]):
-        message = "La función " + str(p[2]) + " ya está definida"
+        message = "The function " + str(p[2]) + " is already defined"
         print(message)
         sys.exit()
     else:
@@ -807,7 +807,7 @@ def p_funcion_2(p):
         drawCompiler.add_quad("RETURN",result,-1,-1)
         drawCompiler.actual_scope = 'global'
     else:
-        message = "El valor de retorno de la función " + str(drawCompiler.actual_scope) + " no es correcto, como esperaba " + str(func_type) + " se regreso " + str(result_type)
+        message = "The return value of the function " + str(drawCompiler.actual_scope) + " is not right, it expected " + str(func_type) + " but the return value was " + str(result_type)
         print(message)
         sys.exit()
 
@@ -827,7 +827,7 @@ def p_var_local_2(p):
 def p_var_local_2_1(p):
     '''var_local_2_1 : data_type ID '''
     if drawCompiler.exists_in_scope(p[2]):
-        message = "Error: La variable " + p[2] + " ya está definida (Línea " + str(p.lexer.lineno) + ")"
+        message = "Error: The variable " + p[2] + " is already defined(Line " + str(p.lexer.lineno) + ")"
         print(message)
         sys.exit()
     else:
@@ -864,9 +864,9 @@ def p_empty(p):
 
 def p_error(p):
     if p is not None:
-        message = "Error en Sintaxis linea: " + str(p.lexer.lineno)+ "  Error de Contexto " + str(p.value)
+        message = "Error of Sintaxis in line: " + str(p.lexer.lineno)+ "  Error of context " + str(p.value)
     else:
-        message = "Error en Lexico linea: " + str(c_lexer.lexer.lineno)
+        message = "Error of Lexico in line: " + str(c_lexer.lexer.lineno)
     print(message)
     sys.exit()
 
