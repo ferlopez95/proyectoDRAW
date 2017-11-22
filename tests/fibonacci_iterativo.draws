@@ -1,0 +1,14 @@
+
+#Programa que calcula la secuencia de fibonacci iterativo
+main()
+	int n1 = 0;
+	int n2 = 1;
+	int limite = 9;
+	int i = 0;
+	#Ciclo que imprime los valores de la secuencia
+	for(i, limite - 2,1)
+		n2 = n1 + n2;
+		n1 = n2 - n1;
+		print(n2);
+	end
+end

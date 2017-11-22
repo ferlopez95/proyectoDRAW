@@ -23,33 +23,45 @@ class Memory:
         self.next_var_boolean = self.boolean
         self.var_draw = {}
 
-        if (boolean == 34000):
-            self.var_boolean[34000] = True
-            self.var_boolean[34001] = False
+        if (boolean == 30000):
+            self.var_boolean[30000] = True
+            self.var_boolean[30001] = False
 
     # Método que obtiene la siguiente dirección de entero y actualiza el valor
     # No recibe parámetros
     # Regresa la siguiente dirección disponible
     def next_int(self):
         actual = self.next_var_int
-        self.next_var_int += 1
-        return actual
+        if(actual == self.int_limit):
+            print("Error: No memory available")
+            return None
+        else:
+            self.next_var_int += 1
+            return actual
 
     # Método que obtiene la siguiente dirección de flotante y actualiza el valor
     # No recibe parámetros
     # Regresa la siguiente dirección disponible
     def next_float(self):
         actual = self.next_var_float
-        self.next_var_float += 1
-        return actual
+        if(actual == self.float_limit):
+            print("Error: No memory available")
+            return None
+        else:
+            self.next_var_float += 1
+            return actual
 
     # Método que obtiene la siguiente dirección de boolenao y actualiza el valor
     # No recibe parámetros
     # Regresa la siguiente dirección disponible
     def next_boolean(self):
         actual = self.next_var_boolean
-        self.next_var_boolean += 1
-        return actual
+        if(actual == self.boolean_limit):
+            print("Error: No memory available")
+            return None
+        else:
+            self.next_var_boolean += 1
+            return actual
 
     # Método que agrega un valor a una dirección sabiendo que es entero
     # Recibe la dirección y el valor como parámetros
@@ -87,7 +99,7 @@ class Memory:
         elif (type == 'boolean'):
             self.add_boolean(dir_virtual, val)
         elif (type == 'draw'):
-            self.add_draw(dir_virtual)
+            self.add_draw(dir_virtual, val)
 
     # Método que obtiene la variable dada una dirección
     # Recibe la dirección como parámetro
@@ -119,7 +131,7 @@ class Memory:
             return 'float'
         elif (self.between(dir_virtual, self.boolean, self.boolean_limit)):
             return 'boolean'
-        elif (self.between(dir_virtual, 10000, 11999)):
+        elif (self.between(dir_virtual, 10000, 11999) or self.between(dir_virtual, 18000, 19999)):
             return 'draw'
 
     # Método que actualiza la siguiente variable disponible despues de la declaración de un arreglo

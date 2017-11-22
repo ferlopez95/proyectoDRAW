@@ -27,7 +27,7 @@ class Globals(Memory):
     #   si no lo encuentra lo agrega y obtiene la siguiente dirección
     # Recibe un valor constante como parámetro
     # Regresa la dirección en la que lo ingresó o donde lo encontró
-    def next_int(self, cte):
+    def next_int_func(self, cte):
         for dir_virtual, cte_val in self.var_int.items():
             if cte_val == cte:
                 return dir_virtual
@@ -38,7 +38,7 @@ class Globals(Memory):
     #   si no lo encuentra lo agrega y obtiene la siguiente dirección
     # Recibe un valor constante como parámetro
     # Regresa la dirección en la que lo ingresó o donde lo encontró
-    def next_float(self, cte):
+    def next_float_func(self, cte):
         for dir_virtual, cte_val in self.var_float.items():
             if cte_val == cte:
                 return dir_virtual
@@ -49,7 +49,7 @@ class Globals(Memory):
     #   si no lo encuentra lo agrega y obtiene la siguiente dirección
     # Recibe un valor constante como parámetro
     # Regresa la dirección en la que lo ingresó o donde lo encontró
-    def next_boolean(self, cte):
+    def next_boolean_func(self, cte):
         for dir_virtual, cte_val in self.var_boolean.items():
             if cte_val == cte:
                 return dir_virtual
@@ -79,9 +79,9 @@ class Locals(Memory):
         bool = 16000
         bool_limit = 17999
 
-        self.draw = 10000
-        self.draw_next = 10000
-        self.draw_limit = 11999
+        self.draw = 18000
+        self.draw_next = 18000
+        self.draw_limit = 19999
 
         Memory.__init__(self, int, int_limit, float, float_limit, bool, bool_limit)
 
@@ -97,16 +97,16 @@ class Locals(Memory):
 class Temps(Memory):
     def __init__(self):
         # Enteras temporales
-        int = 18000
+        int = 20000
         int_limit = 21999
 
         # Flotantes globales
         float = 22000
-        float_limit = 25999
+        float_limit = 23999
 
         # Temporales booleanas
-        bool = 26000
-        bool_limit = 29999
+        bool = 24000
+        bool_limit = 25999
 
         Memory.__init__(self, int, int_limit, float, float_limit, bool, bool_limit)
 
@@ -114,16 +114,16 @@ class Temps(Memory):
 class Constants(Memory):
     def __init__(self):
         # Constantes enteras
-        int= 30000
-        int_limit = 31999
+        int= 26000
+        int_limit = 27999
 
         # Constantes flotantes
-        float= 32000
-        float_limit = 33999
+        float= 28000
+        float_limit = 29999
 
         # Constantes booleanas
-        bool= 34000
-        bool_limit = 34001
+        bool= 30000
+        bool_limit = 30001
 
         Memory.__init__(self, int, int_limit, float, float_limit, bool, bool_limit)
 
@@ -155,6 +155,6 @@ class Constants(Memory):
     # Regresa la dirección en la que lo ingresó o donde lo encontró
     def next_boolean(self, cte):
         if(cte == 'True'):
-            return 34000
+            return 30000
         else:
-            return 34001
+            return 30001

@@ -39,6 +39,7 @@ def open_file():
         ('All files', '*')
     ]
     text_code.delete('1.0', END)
+    clean_canvas()
     file_path = filedialog.askopenfilename(filetypes = ftypes)
     if file_path is None:
         return

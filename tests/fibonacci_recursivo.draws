@@ -10,22 +10,8 @@ def int fibonacci(int n)
 	return x;
 end
 
-#Programa que imprime el factorial de un numero
+#Programa que imprime un número de la secuencia de fibonacci
 main()
 	int a = fibonacci(10);
 	print(a);
-end
-
-#Programa que calcula la secuencia de fibonacci iterativo
-main()
-	int n1 = 0;
-	int n2 = 1;
-	int limite = 9;
-	int i = 0;
-	#Ciclo que imprime los valores de la secuencia
-	for(i, limite - 2,1)
-		n2 = n1 + n2;
-		n1 = n2 - n1;
-		print(n2);
-	end
 end
