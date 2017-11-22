@@ -7,6 +7,7 @@ from VirtualMachine import VirtualMachine
 #import _tkinter
 #import tkinter
 from tkinter import *
+from tkinter import filedialog
 
 parser = c_parser.parser
 drawCompiler = c_parser.drawCompiler
@@ -31,6 +32,30 @@ class RedirectText(object):
 redir = RedirectText(text_console)
 sys.stdout = redir
 
+## Funcion para abrir archivo
+def open_file():
+    ftypes = [
+        ('Draw code files', '*.draws'),
+        ('All files', '*')
+    ]
+    text_code.delete('1.0', END)
+    file_path = filedialog.askopenfilename(filetypes = ftypes)
+    if file_path is None:
+        return
+    with open(file_path, 'r') as file:
+        data = file.read()
+    for line in data:
+        text_code.insert(END, line)
+
+## Funcion para guardar archivo
+def file_save():
+    f = filedialog.asksaveasfile(mode='w', defaultextension=".draws")
+    if f is None:
+        return
+    text = str(text_code.get(1.0, END))
+    f.write(text)
+    f.close()
+
 ## Funcion para compilar el codigo
 def compile():
     drawCompiler.reset()
@@ -50,51 +75,21 @@ def run():
     if (compile()):
         clean_canvas()
         virtual = VirtualMachine(drawCompiler.quad, drawCompiler.memory_manager, drawCompiler.dir_func, canvas)
-        print("Cuadruplos")
-        i = 0
-        for quad in drawCompiler.quad :
-            print(str(i) + " (" + str(quad['operator']) + "," + str(quad['leftOperand']) + "," + str(quad['rightOperand']) + "," + str(quad['result']) + ")")
-            i += 1
-        for key, value in drawCompiler.dir_func.items() :
-            print(str(key) + " : " + str(value))
-        print (drawCompiler.pilaO)
-        print(virtual.memory.mem_global.var_int)
-        print(virtual.memory.mem_local().var_int)
-        print(virtual.memory.mem_const.var_int)
-        print(virtual.stack)
+        #print("Cuadruplos")
+        #i = 0
+        #for quad in drawCompiler.quad :
+        #    print(str(i) + " (" + str(quad['operator']) + "," + str(quad['leftOperand']) + "," + str(quad['rightOperand']) + "," + str(quad['result']) + ")")
+        #    i += 1
+
 
 def clean_canvas():
     canvas.delete("all")
 
 ## Menu
 menubar = Menu(root)
-filemenu = Menu(menubar, tearoff=0)
-filemenu.add_command(label="New")
-filemenu.add_command(label="Open")
-filemenu.add_command(label="Save")
-filemenu.add_command(label="Save as...")
-filemenu.add_command(label="Close")
+menubar.add_command(label="Save", command= file_save)
 
-filemenu.add_separator()
-
-filemenu.add_command(label="Exit", command=root.quit)
-menubar.add_cascade(label="File", menu=filemenu)
-editmenu = Menu(menubar, tearoff=0)
-editmenu.add_command(label="Undo")
-
-editmenu.add_separator()
-
-editmenu.add_command(label="Cut")
-editmenu.add_command(label="Copy")
-editmenu.add_command(label="Paste")
-editmenu.add_command(label="Delete")
-editmenu.add_command(label="Select All")
-
-menubar.add_cascade(label="Edit", menu=editmenu)
-helpmenu = Menu(menubar, tearoff=0)
-helpmenu.add_command(label="Help Index")
-helpmenu.add_command(label="About...")
-menubar.add_cascade(label="Help", menu=helpmenu)
+menubar.add_command(label="Open", command= open_file)
 
 menubar.add_command(label="Compile", command= compile)
 
