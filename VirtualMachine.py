@@ -212,5 +212,8 @@ class VirtualMachine:
                 val3 = self.draw_params.pop()
                 val2 = self.draw_params.pop()
                 val1 = self.draw_params.pop()
-                t.pencolor(float(val1/255),float(val2/255),float(val3/255))
+                if(val3 > 255 or val2 > 255 or val1 > 255 or val3 < 0 or val2 < 0 or val1 < 0):
+                    print("Error: color value should be between 0 and 255")
+                else:
+                    t.pencolor(float(val1/255),float(val2/255),float(val3/255))
             i+=1
