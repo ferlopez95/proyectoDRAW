@@ -790,7 +790,7 @@ def p_funcion_void(p):
 def p_funcion_1(p):
     '''funcion_1 :  data_type_func ID'''
     if drawCompiler.exists_func(p[2]):
-        message = "The function " + str(p[2]) + " is already defined"
+        message = "Error: The function " + str(p[2]) + " is already defined"
         print(message)
         sys.exit()
     else:
@@ -807,7 +807,7 @@ def p_funcion_2(p):
         drawCompiler.add_quad("RETURN",result,-1,-1)
         drawCompiler.actual_scope = 'global'
     else:
-        message = "The return value of the function " + str(drawCompiler.actual_scope) + " is not right, it expected " + str(func_type) + " but the return value was " + str(result_type)
+        message = "Error: The return value of the function " + str(drawCompiler.actual_scope) + " is not right, it expected " + str(func_type) + " but the return value was " + str(result_type)
         print(message)
         sys.exit()
 

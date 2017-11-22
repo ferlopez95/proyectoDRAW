@@ -39,7 +39,7 @@ class VirtualMachine:
                 if(rightOperand != -1):
                     value2 = self.memory.get_var(rightOperand)
             except:
-                print("Null pointer exception")
+                print("Error: Null pointer exception")
                 break
             
             ## Obtener valores para los operadores que usan numeros
