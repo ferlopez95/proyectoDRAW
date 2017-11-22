@@ -39,6 +39,8 @@ class VirtualMachine:
                 if(rightOperand != -1):
                     value2 = self.memory.get_var(rightOperand)
             except:
+                print(leftOperand)
+                print(rightOperand)
                 print("Null pointer exception")
                 break
             
@@ -149,7 +151,7 @@ class VirtualMachine:
                 self.memory.mem_global.add_var(dir, result)
             elif (operator == "NEWDRAW"):
                 new_turtle = turtle.RawTurtle(canvas)
-                self.memory.mem_global.add_draw(result, new_turtle)
+                self.memory.add_var(result, new_turtle)
             elif (operator == "DRAWPARAM"):
                 value = self.memory.get_var(leftOperand)
                 self.draw_params.append(value)

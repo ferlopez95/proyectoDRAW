@@ -187,11 +187,11 @@ class HelperClass(object):
 
     def next_func(self,var_type,cte):
         if var_type == 'int':
-            return self.memory_manager.mem_global.next_int(cte)
+            return self.memory_manager.mem_global.next_int_func(cte)
         elif var_type == 'float':
-            return self.memory_manager.mem_global.next_float(cte)
+            return self.memory_manager.mem_global.next_float_func(cte)
         elif var_type == 'boolean':
-            return self.memory_manager.mem_global.next_boolean(cte)
+            return self.memory_manager.mem_global.next_boolean_func(cte)
 
     def next_var_draw(self):
         if(self.actual_scope == 'global'):

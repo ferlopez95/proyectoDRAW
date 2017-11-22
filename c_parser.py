@@ -15,7 +15,7 @@ drawCompiler.add_func('void', 'global')
 
 
 def p_programa(p):
-    '''programa : init globales funciones programa_end
+    '''programa : globales init funciones programa_end
     | init funciones programa_end'''
 
 def p_init(p):
@@ -184,6 +184,7 @@ def p_vars(p):
             sys.exit()
         else:
             next_dir = drawCompiler.next_var_draw()
+            print(next_dir)
             drawCompiler.add_var(p[1], p[2], next_dir)
             drawCompiler.add_quad("NEWDRAW",-1,-1,next_dir)
 

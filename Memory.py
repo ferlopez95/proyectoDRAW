@@ -18,14 +18,18 @@ class Memory:
         self.next_var_boolean = self.boolean
         self.var_draw = {}
 
-        if (boolean == 34000):
-            self.var_boolean[34000] = True
-            self.var_boolean[34001] = False
+        if (boolean == 30000):
+            self.var_boolean[30000] = True
+            self.var_boolean[30001] = False
 
     def next_int(self):
         actual = self.next_var_int
-        self.next_var_int += 1
-        return actual
+        if(actual == self.int_limit):
+            print("Error: No memory available")
+            return None
+        else:
+            self.next_var_int += 1
+            return actual
 
     def next_float(self):
         actual = self.next_var_float
@@ -58,7 +62,7 @@ class Memory:
         elif (type == 'boolean'):
             self.add_boolean(dir_virtual, val)
         elif (type == 'draw'):
-            self.add_draw(dir_virtual)
+            self.add_draw(dir_virtual, val)
 
     def get_var(self, dir_virtual):
         type = self.get_type(dir_virtual)
@@ -81,7 +85,7 @@ class Memory:
             return 'float'
         elif (self.between(dir_virtual, self.boolean, self.boolean_limit)):
             return 'boolean'
-        elif (self.between(dir_virtual, 10000, 11999)):
+        elif (self.between(dir_virtual, 10000, 11999) or self.between(dir_virtual, 18000, 19999)):
             return 'draw'
 
     def array_dim(self,type,dir_virtual,dim):

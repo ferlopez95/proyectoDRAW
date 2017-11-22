@@ -42,7 +42,7 @@ class MemoryManager:
     def get_type(self, dir_virtual):
         if (self.between(dir_virtual, self.mem_global.int, self.mem_global.draw_limit)):
             return self.mem_global
-        elif (self.between(dir_virtual, self.mem_local().int, self.mem_local().boolean_limit)):
+        elif (self.between(dir_virtual, self.mem_local().int, self.mem_local().draw_limit)):
             return self.mem_local()
         elif (self.between(dir_virtual, self.mem_temp().int, self.mem_temp().boolean_limit)):
             return self.mem_temp()
@@ -62,9 +62,10 @@ class MemoryManager:
         self.mem_local().next_var_int = 12000
         self.mem_local().next_var_float = 14000
         self.mem_local().next_var_boolean = 16000
-        self.mem_temp().next_var_int = 18000
+        self.mem_local().draw_next = 18000
+        self.mem_temp().next_var_int = 20000
         self.mem_temp().next_var_float = 22000
-        self.mem_temp().next_var_boolean = 26000
+        self.mem_temp().next_var_boolean = 24000
 
     def add_context(self):
         self.mem_local_stack.append(Locals())
