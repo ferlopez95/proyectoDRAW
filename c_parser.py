@@ -864,7 +864,7 @@ def p_empty(p):
 
 def p_error(p):
     if p is not None:
-        message = "Sintaxis error in line: " + str(p.lexer.lineno)+ "  Error of context " + str(p.value)
+        message = "Sintaxis error in line: " + str(p.lexer.lineno)+ "  Context error" + str(p.value)
     else:
         message = "Lexic error in line: " + str(c_lexer.lexer.lineno)
     print(message)
