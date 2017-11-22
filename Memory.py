@@ -33,13 +33,21 @@ class Memory:
 
     def next_float(self):
         actual = self.next_var_float
-        self.next_var_float += 1
-        return actual
+        if(actual == self.float_limit):
+            print("Error: No memory available")
+            return None
+        else:
+            self.next_var_float += 1
+            return actual
 
     def next_boolean(self):
         actual = self.next_var_boolean
-        self.next_var_boolean += 1
-        return actual
+        if(actual == self.boolean_limit):
+            print("Error: No memory available")
+            return None
+        else:
+            self.next_var_boolean += 1
+            return actual
 
     def add_int(self, dir, val):
         self.var_int[dir] = val
